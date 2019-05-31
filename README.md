@@ -5,3 +5,4 @@ The Python implementation was developed by R. C. Levy (rlevy@astro.umd.edu) and 
 
 The MATLAB versions of these scripts were used to derive the rotation curves presented in Levy et al. 2018: https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract
 
+Please see examples for use in the code headers.
