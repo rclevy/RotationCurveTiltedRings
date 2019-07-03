@@ -11,7 +11,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys):
 		astropy header of velocity field
 	velfield : array
 		2D numpy array containing the velocity map
-	velfield : array
+	evelfield : array
 		2D numpy array containing the errors on the velocity map
 	RA : float
 		J2000 right ascension of the kinematic center of the galaxy, in decimal degrees
