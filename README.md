@@ -1,7 +1,7 @@
 # RotationCurveTiltedRings
 Script to fit rotation curves from galaxy velocity fields using tilted rings and a first order harmonic decomposition. Please see examples for use in the code header.
 
-The Python implementation was developed by R. C. Levy (rlevy@astro.umd.edu) and is based on MATLAB scripts by A. D. Bolatto, J. D. Simon, and R. C. Levy.
+The Python implementation was developed by R. C. Levy (rlevy.astro@gmail.com) and is based on MATLAB scripts by A. D. Bolatto, J. D. Simon, and R. C. Levy.
 
 The Python implementation will be published in a forthcoming paper (Cooke, Levy, Bolatto, et al. In prep.).
 
