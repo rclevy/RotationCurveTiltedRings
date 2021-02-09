@@ -8,10 +8,12 @@ The Python implementation will be published in a forthcoming paper (Cooke, Levy,
 The MATLAB versions of this script were used to derive the rotation curves presented in:
 - [Simon et al. 2003](https://ui.adsabs.harvard.edu/abs/2003ApJ...596..957S/abstract)
 - [Simon et al. 2005](https://ui.adsabs.harvard.edu/abs/2005ApJ...621..757S/abstract)
-- [Levy et al. 2018](https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract).
+- [Levy et al. 2018](https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract)
+
+*Any use of this code must cite Cooke, Levy, et al. (2021, in prep) and should cite the above three papers as well.*
 
 ### CO Data Products
-This repository also contains the associated CO data products. See the README in /CODataProducts.
+This repository also contains the associated CO data products presented by Cooke, Levy, et al. (2021, in prep.). See the README in CODataProducts/.
 
 ### Notes
 This repository's main branch is called [main, not master](https://www.cnet.com/news/microsofts-github-is-removing-coding-terms-like-master-and-slave/).
