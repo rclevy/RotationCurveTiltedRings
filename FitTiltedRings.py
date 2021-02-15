@@ -327,7 +327,8 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 					#plot a summary plot
 					ax[i-1].plot(np.degrees(allang),rota,'g-',zorder=9)
 					ax[i-1].plot(np.degrees(allang),moda,'r-',linewidth=2.,zorder=10)
-					ax[i-1].errorbar(ang[ix],vs[ix],yerr=evs[ix],fmt='b.')
+					ax[i-1].errorbar(ang[ix],vs[ix],yerr=evs[ix],fmt='b',marker='None',linestyle='None',alpha=0.2)
+					ax[i-1].plot(ang[ix],vs[ix],'b.')
 					ax[i-1].set_xlim(-180., 180.)
 					ax[i-1].set_ylim(-200., 200.)
 					ax[i-1].text(0.05,0.95,str(i),fontsize=8.,verticalalignment='top',transform=ax[i-1].transAxes)
