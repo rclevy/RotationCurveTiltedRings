@@ -26,7 +26,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 	Vsys : float
 		Systemic (AKA recessional) velocity of the center of the galaxy, in km/s
 	rmEndRings : int
-		Number of end rings to remove from rotation curve fit
+		Number of end rings to remove from rotation curve fit, imposed after Rmax
 	Rmax : float
 		Maximum radius of rings, if NaN this limit is not imposed, in arcsec
 	save_dir : str
@@ -55,16 +55,17 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 	
 	Notes
 	-----
-	Required packages: numpy, matplotlib, os
+	Required packages: numpy, matplotlib, os, sys
 	Author: R. C. Levy (rlevy.astro@gmail.com)
 	Based on bestfit.m and ringfit.m by A. D. Bolatto and bestgetrings.m by R. C. Levy
-	Last updated: 2021-02-15
+	Last updated: 2021-02-22
 	Change log:
 		2019-05-17 : file created, RCL
 		2019-05-20 : finished writing code, RCL
 		2020-05-28 : added save_dir arg, other minor cleaning up, RCL
 		2021-01-29 : added parameter to remove some number of bad end rings from fit, RCL
-		2021-02-25 : return rms, add script name to pdf metadata, added Rmax keyword, RCL
+		2021-02-15 : return rms, add script name to pdf metadata, added Rmax keyword, RCL
+		2021-02-22 : fix ring-spacing algorithm, RCL
 
 	Examples
 	--------
@@ -144,28 +145,35 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 			r_beamspace = np.arange(0.,np.max(rr),bmaj/2)
 		else:
 			r_beamspace = np.arange(0.,Rmax,bmaj/2)
+		#make the first bin the beam size
+		#r_beamspace = np.delete(r_beamspace,1)
 		#unless there are fewer than min_ppr pixels in the ring
-		min_ppr = 30 #minimum number of pixels in a ring
+		min_ppr = 30 #minimum number of pixels per ring
 		nring = 0
 		this_max_r = 0.0
 		while (this_max_r < (np.max(rr_sort)-bmaj/2)) & (nring+1 < len(r_beamspace)):
-			r_thisring = rr_sort[(rr_sort>=r_beamspace[nring]) & (rr_sort < r_beamspace[nring+1])]
+			#update ring number
 			nring = nring+1
+			#find radii in this ring
+			r_thisring = rr_sort[(rr_sort>=r_beamspace[nring-1]) & (rr_sort < r_beamspace[nring])]
 			if len(r_thisring)== 0:
 				break
 			this_max_r = np.max(r_thisring)
 			
+			#find pixel indices in this ring
 			idx = np.array([np.where(rr_sort==el)[0][0] for el in r_thisring])
+			#if fewer than min_ppr pixels in this ring, expand the ring radius
 			if len(idx) < min_ppr:
 				dpix = min_ppr-len(idx) #number of pixels to add
 				new_idx = idx[-1]+dpix
 				if new_idx >= len(rr_sort):
+					#if at edge of map, delete this ring and break
 					nring=nring-1
 					this_max_r = np.inf
 				else:
-					dr = rr_sort[idx[-1]+dpix]-rr_sort[idx[-1]] #change in r to add to all future rings (to keep half beam spacing)
+					dr = rr_sort[new_idx]-rr_sort[idx[-1]] #change in r to add to all future rings (to keep half beam spacing)
 					#update radii of rings
-					r_beamspace[nring+1:] = r_beamspace[nring+1:]+dr
+					r_beamspace[nring:] = r_beamspace[nring:]+dr
 					#re-find radii and indices of this ring
 					r_thisring = rr_sort[(rr_sort>=r_beamspace[nring-1]) & (rr_sort < r_beamspace[nring])]
 					this_max_r = np.max(r_thisring)
