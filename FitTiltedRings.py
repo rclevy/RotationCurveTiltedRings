@@ -26,7 +26,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 	Vsys : float
 		Systemic (AKA recessional) velocity of the center of the galaxy, in km/s
 	rmEndRings : int
-		Number of end rings to remove from rotation curve fit, imposed after Rmax
+		Number of end rings to remove from rotation curve fit, imposed after Rmax, can be 0 (no rings removed)
 	Rmax : float
 		Maximum radius of rings, if NaN this limit is not imposed, in arcsec
 	save_dir : str
@@ -145,9 +145,6 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 			r_beamspace = np.arange(0.,np.max(rr),bmaj/2)
 		else:
 			r_beamspace = np.arange(0.,Rmax,bmaj/2)
-		#make the first bin the beam size
-		#r_beamspace = np.delete(r_beamspace,1)
-		#unless there are fewer than min_ppr pixels in the ring
 		min_ppr = 30 #minimum number of pixels per ring
 		nring = 0
 		this_max_r = 0.0
@@ -178,9 +175,6 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 					r_thisring = rr_sort[(rr_sort>=r_beamspace[nring-1]) & (rr_sort < r_beamspace[nring])]
 					this_max_r = np.max(r_thisring)
 					idx = np.array([np.where(rr_sort==el)[0][0] for el in r_thisring])
-				#else:
-					#nring=nring-1
-				#	this_max_r = np.inf
 			#clean up
 		r_rings = r_beamspace[0:nring+1] #inner radii of the rings, arcsec
 
@@ -199,7 +193,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		arat = np.cos(np.radians(inc))
 		#get sin(inc) projection factor
 		sini = np.sin(np.radians(inc))
-		#flag points > flagcut*sigma frim fit
+		#flag points > flagcut*sigma from fit
 		flatcut = 10.
 		#get pa in radians
 		#par = np.radians(PA-90.)
@@ -409,6 +403,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 
 		return sol, err, rms
 
+	#different methods to get rotation curve uncertainties, will depend on use case
 	def uncert_beamosamp(err,beam_osamp):
 		#muliply uncertainties from the fit by sqrt(beam_osamp)
 		eVrot = err[1]*np.sqrt(beam_osamp)
