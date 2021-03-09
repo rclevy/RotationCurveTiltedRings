@@ -12,7 +12,7 @@ The MATLAB versions of this script were used to derive the rotation curves prese
 
 *Any use of this code must cite Cooke, Levy, et al. (2021, in prep) and should cite the above three papers as well.*
 
-## CO data products presented in Cooke, Levy, et al. (2021, in prep.).
+### CO data products presented in Cooke, Levy, et al. (2021, in prep.) (CoDataProducts_Cooke2021.tar.gz)
 
 The ALMA data used for this study are part of program ADS/JAO.ALMA#2015.1.00820.S (PI L. Blitz) and are publicly available on the [ALMA Science Archive](https://almascience.nrao.edu/asax/).
 
@@ -21,7 +21,7 @@ See Section 2 of Cooke, Levy, et al. (2021, in prep.) for details on the data ca
 *Any use of these data products must cite Cooke, Levy, et al. (2021, in prep.).*
 
 
-### Data Products
+#### Data Products
 - Peak intensity: \*.gausspk.fits
 - Error in peak intensity: \*.egausspk.fits
 - Velocity centroid: \*.cgrad.vcen.fits
