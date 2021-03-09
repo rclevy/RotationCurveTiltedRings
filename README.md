@@ -3,6 +3,7 @@ FitTiltedRings.py fits rotation curves from galaxy velocity fields using tilted 
 - [Simon et al. 2003](https://ui.adsabs.harvard.edu/abs/2003ApJ...596..957S/abstract)
 - [Simon et al. 2005](https://ui.adsabs.harvard.edu/abs/2005ApJ...621..757S/abstract)
 - [Levy et al. 2018](https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract)
+
 *Any use of this code must cite Cooke, Levy, et al. (2021, in prep) and should cite the above three papers as well.*
 
 FitCORotationCurves.py is a convenience wrapper function to load the relevant data, plot the velocity fields, fit, save, and plot the rotation curves, and do a Monte Carlo to get uncertainties on the rotation curves. This wrapper was written by R. C. Levy (rlevy.astro@gmail.com).
@@ -14,6 +15,7 @@ The ALMA data used for this study are part of program ADS/JAO.ALMA#2015.1.00820.
 - Error in velocity centroid: \*.evcen.fits
 - Linewidth (FWHM): \*.fwhm.fits
 - Error in linewidth: \*.efwhm.fits
+
 *Any use of these data products must cite Cooke, Levy, et al. (2021, in prep.).*
 
 ## Notes
