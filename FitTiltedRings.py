@@ -1,6 +1,6 @@
 this_script = __file__
 
-def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEndRings,Rmax,save_dir,plotOn):
+def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEndRings,Rmax,save_dir,plotOn,rotmodel):
 	
 	r'''
 	Derive rotation curve using tilted rings and a first order harmonic decomposition.
@@ -26,20 +26,23 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 	Vsys : float
 		Systemic (AKA recessional) velocity of the center of the galaxy, in km/s
 	rmEndRings : int
-		Number of end rings to remove from rotation curve fit, imposed after Rmax, can be 0 (no rings removed)
+		Number of end rings to remove from rotation curve fit, imposed after Rmax
 	Rmax : float
 		Maximum radius of rings, if NaN this limit is not imposed, in arcsec
 	save_dir : str
 		Path to directory to save output plots
 	plotON: flag
-	    If true or NOT GIVEN, will make and save intermediate plots
+		If true or NOT GIVEN, will make and save intermediate plots
 		If false, will NOT make nor save intermediate plots
+	rotmodel : flag
+		If 'rotonly', fits only the rotation (cosine) component
+		If 'full', other, or NOT GIVEN, fits full rotation model (rotation:cosine, radial:sine, systemic:constant)
 
 		
 	Returns
 	-------
 	R : array
-		numpy array containing the radii of the fitted rings
+		numpy array containing the radii (center) of the fitted rings
 	Vrot : array
 		numpy array containing the fitted rotation velocity (cosine component)
 	eVrot : array
@@ -58,7 +61,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 	Required packages: numpy, matplotlib, os, sys
 	Author: R. C. Levy (rlevy.astro@gmail.com)
 	Based on bestfit.m and ringfit.m by A. D. Bolatto and bestgetrings.m by R. C. Levy
-	Last updated: 2021-02-22
+	Last updated: 2021-03-09
 	Change log:
 		2019-05-17 : file created, RCL
 		2019-05-20 : finished writing code, RCL
@@ -66,6 +69,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		2021-01-29 : added parameter to remove some number of bad end rings from fit, RCL
 		2021-02-15 : return rms, add script name to pdf metadata, added Rmax keyword, RCL
 		2021-02-22 : fix ring-spacing algorithm, RCL
+		2021-03-09 : add keyword to allow for rotation-only model to be fit, RCL
 
 	Examples
 	--------
@@ -75,6 +79,12 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 	'''
 	if (len(locals()) < 11):
 		plotOn = True
+		rotmodel = 'full'
+	if (len(locals()) < 12):
+		rotmodel = 'full'
+	else:
+		if rotmodel != 'rotonly':
+			rotmodel = 'full'
 	#import modules
 	import numpy as np
 	import matplotlib.pyplot as plt
@@ -145,6 +155,9 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 			r_beamspace = np.arange(0.,np.max(rr),bmaj/2)
 		else:
 			r_beamspace = np.arange(0.,Rmax,bmaj/2)
+		#make the first bin the beam size
+		#r_beamspace = np.delete(r_beamspace,1)
+		#unless there are fewer than min_ppr pixels in the ring
 		min_ppr = 30 #minimum number of pixels per ring
 		nring = 0
 		this_max_r = 0.0
@@ -175,6 +188,9 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 					r_thisring = rr_sort[(rr_sort>=r_beamspace[nring-1]) & (rr_sort < r_beamspace[nring])]
 					this_max_r = np.max(r_thisring)
 					idx = np.array([np.where(rr_sort==el)[0][0] for el in r_thisring])
+				#else:
+					#nring=nring-1
+				#	this_max_r = np.inf
 			#clean up
 		r_rings = r_beamspace[0:nring+1] #inner radii of the rings, arcsec
 
@@ -185,7 +201,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		return r_rings
 
 
-	def ringfit(vel_list,r_rings,PA,inc,Vsys,beam_osamp,gal_name,plotOn,save_dir):
+	def ringfit(vel_list,r_rings,PA,inc,Vsys,beam_osamp,gal_name,plotOn,rotmodel,save_dir):
 		#fit a first order harmonic decomposition using the previously derived rings
 		#based on ringfit.m by A. D. Bolatto
 
@@ -193,7 +209,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		arat = np.cos(np.radians(inc))
 		#get sin(inc) projection factor
 		sini = np.sin(np.radians(inc))
-		#flag points > flagcut*sigma from fit
+		#flag points > flagcut*sigma frim fit
 		flatcut = 10.
 		#get pa in radians
 		#par = np.radians(PA-90.)
@@ -253,15 +269,26 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 				ang = np.degrees(th)
 				wt = 1./evs
 			#fit rotation
-				sol, err, rms[i] = fitrotn(th,vs,wt)
-				Vrot[i] = sol[1]
-				Vrad[i] = sol[2]
-				dVsys[i] = sol[0]
+				sol, err, rms[i] = fitrotn(th,vs,wt,rotmodel)
+				if rotmodel == 'full':
+					Vrot[i] = sol[1]
+					Vrad[i] = sol[2]
+					dVsys[i] = sol[0]
+					eVrot[i] = err[1]
+					eVrad[i] = err[2]
+					edVsys[i] = err[0]
+				else:
+					Vrot[i] = sol
+					Vrad[i] = 0.
+					dVsys[i] = 0.
+					eVrot[i] = err[0]
+					eVrad[i] = 0.
+					edVsys[i] = 0.
 
 
 			#get uncertainties
 				#get "base" uncertainties from the fitting
-				eVrot[i] = err[1]; eVrad[i] = err[2]; edVsys[i] = err[0]
+				
 				# #get uncertainies by simply multiplying "base" by sqrt(beam_osamp)
 				# eVrot[i],eVrad[i],edVsys[i]=uncert_beamosamp(err,beam_osamp)
 				# #get uncertainties by fitting each half of the galaxy seperately
@@ -298,8 +325,8 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 
 				if (plotOn == True):
 					print('Ring '+str(i)+' with r_max = '+str(np.round(r_rings[i],2))+
-					      '" has '+str(int(npt[i]))+' pixels, RMS = '
-					      +str(np.round(rms[i],2))+', Chi^2_r = '+str(np.round(chisqr[i],2)))
+						  '" has '+str(int(npt[i]))+' pixels, RMS = '
+						  +str(np.round(rms[i],2))+', Chi^2_r = '+str(np.round(chisqr[i],2)))
 					#plot the fit for each ring
 					plt.figure(4)
 					plt.clf()
@@ -313,7 +340,8 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 					plt.fill_between(np.degrees(allang),rota-erota,rota+erota,ec=None,fc='r',alpha=0.3)					
 					plt.fill_between(np.degrees(allang),moda-emoda,moda+emoda,ec=None,fc='g',alpha=0.3)
 					plt.plot(np.degrees(allang),rota,'r-',label='Rotation only model')
-					plt.plot(np.degrees(allang),moda,'g-',label='Full model')
+					if rotmodel == 'full':
+						plt.plot(np.degrees(allang),moda,'g-',label='Full model')
 					plt.xlabel('Azimuthal Angle (degrees)')
 					plt.ylabel('Velocity (km s$^{-1}$)')
 					plt.legend(loc='upper right',fontsize=8)
@@ -322,13 +350,17 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 					plt.minorticks_on()
 					t_str = gal_name+': Radius = '+str(np.round(R[i],1))+'", RMS = '+str(np.round(rms[i],1))+', $\chi^2_r$ = '+str(np.round(chisqr[i],1))
 					plt.title(t_str)
-					fig_name = save_dir+gal_name+'_ringfit_'+str(np.round(R[i],3))+'.pdf'
+					if rotmodel == 'full':
+						fig_name = save_dir+gal_name+'_ringfit_'+str(np.round(R[i],3))+'.pdf'
+					else:
+						fig_name = save_dir+gal_name+'_ringfit_'+rotmodel+'_'+str(np.round(R[i],3))+'.pdf'
 					plt.savefig(fig_name,bbox_inches='tight',metadata={'Creator':this_script})
 					plt.close()
 
 					#plot a summary plot
-					ax[i-1].plot(np.degrees(allang),rota,'g-',zorder=9)
-					ax[i-1].plot(np.degrees(allang),moda,'r-',linewidth=2.,zorder=10)
+					ax[i-1].plot(np.degrees(allang),rota,'r-',zorder=9)
+					if rotmodel=='full':
+						ax[i-1].plot(np.degrees(allang),moda,'g-',linewidth=2.,zorder=10)
 					ax[i-1].errorbar(ang[ix],vs[ix],yerr=evs[ix],fmt='b',marker='None',linestyle='None',alpha=0.2)
 					ax[i-1].plot(ang[ix],vs[ix],'b.')
 					ax[i-1].set_xlim(-180., 180.)
@@ -358,52 +390,62 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 				axx.remove()
 			#save summary plot
 			plt.figure(5)
-			fig_name = save_dir+gal_name+'_ringfit.pdf'
+			if rotmodel=='full':
+				fig_name = save_dir+gal_name+'_ringfit.pdf'
+			else:
+				fig_name = save_dir+gal_name+'_ringfit_'+rotmodel+'.pdf'
 			plt.savefig(fig_name,bbox_inches='tight',metadata={'Creator':this_script})
 			plt.close()
 
 		return R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms
 
-	def fitrotn(th,vs,wt):
+	def fitrotn(th,vs,wt,rotmodel):
 		#fit rotation with first order harmonic decomposition
 		#based on fitrotn.m by A. D. Bolatto
 		#needs exception for when N = 1 ************
 		w2 = wt**2
 		N = len(th)
 		D = 1./N*np.sum(w2)
-		X1 = np.mean(np.cos(th))
-		X2 = np.mean(np.sin(th))
-		Y=np.mean(vs)
-		s1=1./(N-1)*np.sum(w2*(np.cos(th)-X1)**2)/D
-		s12=1./(N-1)*np.sum(w2*(np.cos(th)-X1)*(np.sin(th)-X2))/D
-		s2=1./(N-1)*np.sum(w2*(np.sin(th)-X2)**2)/D
-		sy=1./(N-1)*np.sum(w2*(vs-Y)**2)/D
-		s1y=1./(N-1)*np.sum(w2*(np.cos(th)-X1)*(vs-Y))/D
-		s2y=1./(N-1)*np.sum(w2*(np.sin(th)-X2)*(vs-Y))/D
-		r12=s12/np.sqrt(s1*s2);
-		r11=1
-		r22=1
-		r21=r12
-		r1y=s1y/np.sqrt(s1*sy)
-		r2y=s2y/np.sqrt(s2*sy)
-		r=np.array([[r11,r12],[r21,r22]])
-		rm=np.linalg.inv(r)
+		if rotmodel=='full':
+			#fit the full rotation model: rotation (cosine), radial (sine), systemic (constant)
+			X1 = np.mean(np.cos(th))
+			X2 = np.mean(np.sin(th))
+			Y=np.mean(vs)
+			s1=1./(N-1)*np.sum(w2*(np.cos(th)-X1)**2)/D
+			s12=1./(N-1)*np.sum(w2*(np.cos(th)-X1)*(np.sin(th)-X2))/D
+			s2=1./(N-1)*np.sum(w2*(np.sin(th)-X2)**2)/D
+			sy=1./(N-1)*np.sum(w2*(vs-Y)**2)/D
+			s1y=1./(N-1)*np.sum(w2*(np.cos(th)-X1)*(vs-Y))/D
+			s2y=1./(N-1)*np.sum(w2*(np.sin(th)-X2)*(vs-Y))/D
+			r12=s12/np.sqrt(s1*s2);
+			r11=1
+			r22=1
+			r21=r12
+			r1y=s1y/np.sqrt(s1*sy)
+			r2y=s2y/np.sqrt(s2*sy)
+			r=np.array([[r11,r12],[r21,r22]])
+			rm=np.linalg.inv(r)
 
-		a1=np.sqrt(sy/s1)*(r1y*rm[0,0]+r2y*rm[0,1])
-		a2=np.sqrt(sy/s2)*(r1y*rm[1,0]+r2y*rm[1,1])
-		a0=np.sum(w2*(vs-a1*np.cos(th)-a2*np.sin(th)))/np.sum(w2)
-		sol=np.array([a0,a1,a2])
+			a1=np.sqrt(sy/s1)*(r1y*rm[0,0]+r2y*rm[0,1])
+			a2=np.sqrt(sy/s2)*(r1y*rm[1,0]+r2y*rm[1,1])
+			a0=np.sum(w2*(vs-a1*np.cos(th)-a2*np.sin(th)))/np.sum(w2)
+			sol=np.array([a0,a1,a2])
 
-		sa1=1/(N-1)/s1*rm[0,0]/D
-		sa2=1/(N-1)/s2*rm[1,1]/D
-		sa0=(1/N+1/(N-1)*(X1**2/s1*rm[0,0]+X2**2/s2*rm[0,1]+2*X1*X2/np.sqrt(s1*s2)*rm[0,1]))/D
-		err=np.sqrt(np.array([sa0,sa1,sa2]))
+			sa1=1/(N-1)/s1*rm[0,0]/D
+			sa2=1/(N-1)/s2*rm[1,1]/D
+			sa0=(1/N+1/(N-1)*(X1**2/s1*rm[0,0]+X2**2/s2*rm[0,1]+2*X1*X2/np.sqrt(s1*s2)*rm[0,1]))/D
+			err=np.sqrt(np.array([sa0,sa1,sa2]))
+			
+			rms=np.std(vs-sol[1]*np.cos(th)-sol[2]*np.sin(th)-sol[0])
 		
-		rms=np.std(vs-sol[1]*np.cos(th)-sol[2]*np.sin(th)-sol[0])
+		else:
+			#fit only the rotation (cosine) component
+			sol=np.sum(vs*np.cos(th)*w2)/np.sum(w2*np.cos(th)**2)
+			err=np.sqrt(w2*np.sum(np.cos(th)**2)/np.sum(w2*np.cos(th)**2))
+			rms=np.std(vs-sol*np.cos(th))
 
 		return sol, err, rms
 
-	#different methods to get rotation curve uncertainties, will depend on use case
 	def uncert_beamosamp(err,beam_osamp):
 		#muliply uncertainties from the fit by sqrt(beam_osamp)
 		eVrot = err[1]*np.sqrt(beam_osamp)
@@ -477,11 +519,14 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		
 		if plotOn==True:
 			#remove existing ring fit figures
-			ringfilename = save_dir+gal_name+'*.pdf'
+			if rotmodel == 'full':
+				ringfilename = save_dir+gal_name+'*.pdf'
+			else:
+				ringfilename = save_dir+gal_name+'*'+rotmodel+'*.pdf'
 			os.system('rm -f '+ringfilename)
 
 	#fit the rotation curve
-		R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms=ringfit(vel_list,r_rings,PA,inc,Vsys,beam_osamp,gal_name,plotOn,save_dir)
+		R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms=ringfit(vel_list,r_rings,PA,inc,Vsys,beam_osamp,gal_name,plotOn,rotmodel,save_dir)
 
 	else:
 		print('Too few rings for fitting.')
