@@ -100,14 +100,17 @@ def main(gal_name):
 	#run the ringfitting
 	save_dir='../Plots/ringfit/'
 	rotmodel = 'full' #fit full model: rotation (cosine), radial (sine), systemic (constant)
-	#rotmodel = 'rotonly' #fit using only the rotation (cosine) component
+	print('Fitting with '+rotmodel+' model')
 	R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA,Inc,Vsys,rmEndRings,np.nan,save_dir,True,rotmodel)
+
+	#now fit the rotation-only model
+	R_ro,eR_ro,Vrot_ro,eVrot_ro,_,_,_,_,_,_,rms_ro=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA,Inc,Vsys,rmEndRings,np.nan,save_dir,False,'rotonly')
 
 	#plot the velocity field
 	plt.figure(1)
 	plt.clf()
 	ax=plt.subplot(projection=wcs)
-	im=ax.imshow(vel-Vsys,origin='lower',cmap='RdYlBu',vmin=-100,vmax=100)
+	im=ax.imshow(vel-Vsys,origin='lower',cmap='RdYlBu_r',vmin=-100,vmax=100)
 	ax.plot(RA_pix,Dec_pix,'kx')
 	cb=plt.colorbar(im,shrink=0.7)
 	cb.set_label('V$_{\mathrm{CO}}$-V$_{\mathrm{sys}}$ (km s$^{-1}$)')
@@ -142,9 +145,10 @@ def main(gal_name):
 
 	#do a MonteCarlo over the geometric parameters
 	ntrials = 50
-	eevrot = np.zeros((ntrials,int(len(Vrot))))#*1.5)))
-	eevrad = np.zeros((ntrials,int(len(Vrot))))#*1.5)))
-	eedvsys = np.zeros((ntrials,int(len(Vrot))))#*1.5)))
+	eevrot = np.zeros((ntrials,int(len(Vrot))))
+	eevrad = np.zeros((ntrials,int(len(Vrot))))
+	eedvsys = np.zeros((ntrials,int(len(Vrot))))
+	eevrot_ro = np.zeros((ntrials,int(len(Vrot))))
 	pa_off = 5. #deg
 	inc_off = 5. #deg
 	cen_off = 1.0/3600 #deg
@@ -154,6 +158,7 @@ def main(gal_name):
 		pa = PA + np.random.uniform(low=-pa_off,high=pa_off)
 		inc = Inc + np.random.uniform(low=-inc_off,high=inc_off)
 		_,_,e1,_,e2,_,e0,_,_,_,_=fit_tilted_rings(gal_name,hdr,vel,evel,ra,dec,pa,inc,Vsys,rmEndRings,np.nan,save_dir,False,rotmodel)
+		_,_,e1_ro,_,_,_,_,_,_,_,_=fit_tilted_rings(gal_name,hdr,vel,evel,ra,dec,pa,inc,Vsys,rmEndRings,np.nan,save_dir,False,'rotonly')
 
 		if (np.all(np.isnan(e1))==True) | (np.all(np.isnan(e2))==True) | (np.all(np.isnan(e0))==True):
 			#throw away trials that result in NaNs
@@ -176,10 +181,27 @@ def main(gal_name):
 			eevrot[j,:]=e1
 			eevrad[j,:]=e2
 			eedvsys[j,:]=e0
+
+
+		if np.all(np.isnan(e1_ro))==True:
+			#throw away trials that result in NaNs
+			eevrot_ro[j,:]=np.nan
+		else:
+			if len(e1_ro) > len(Vrot_ro):
+				#if MC has more rings, trim extra rings
+				e1_ro=e1_ro[0:len(Vrot_ro)]
+			elif len(e1_ro) < len(Vrot_ro):
+				#if MC has fewer rings, pad with NaNs
+				pad = np.zeros((int(len(Vrot_ro)-len(e1_ro)),))*np.nan
+				e1_ro = np.concatenate((e1_ro,pad))				
+			
+			eevrot_ro[j,:]=e1_ro
+
 			
 	eVrot = np.nanstd(eevrot,axis=0)[0:len(R)]
 	eVrad = np.nanstd(eevrad,axis=0)[0:len(R)]
 	edVsys = np.nanstd(eedvsys,axis=0)[0:len(R)]
+	eVrot_ro = np.nanstd(eevrot_ro,axis=0)[0:len(R_ro)]
 
 	#remove the 0,0 point
 	R=R[1:]
@@ -193,6 +215,11 @@ def main(gal_name):
 	chisq=chisq[1:]
 	chisqr=chisqr[1:]
 	rms=rms[1:]
+	R_ro=R_ro[1:]
+	eR_ro=eR_ro[1:]
+	Vrot_ro=Vrot_ro[1:]
+	eVrot_ro=eVrot_ro[1:]
+	rms_ro=rms_ro[1:]
 	#remove all NaN points
 	eR=eR[np.isnan(R)==False]
 	Vrot=Vrot[np.isnan(R)==False]
@@ -205,16 +232,26 @@ def main(gal_name):
 	chisqr=chisqr[np.isnan(R)==False]
 	rms=rms[np.isnan(R)==False]
 	R=R[np.isnan(R)==False]
+	eR_ro=eR_ro[np.isnan(R_ro)==False]
+	Vrot_ro=Vrot_ro[np.isnan(R_ro)==False]
+	eVrot_ro=eVrot_ro[np.isnan(R_ro)==False]
+	rms_ro=rms_ro[np.isnan(R_ro)==False]
+	R_ro=R_ro[np.isnan(R_ro)==False]
 
 	eVrot = np.sqrt(eVrot**2+rms**2)
+	eVrot_ro = np.sqrt(eVrot_ro**2+rms_ro**2)
+
+	eVrot_u = np.nanmax([Vrot+eVrot,Vrot_ro+eVrot_ro],axis=0)-Vrot
+	eVrot_l = Vrot-np.nanmin([Vrot-eVrot,Vrot_ro-eVrot_ro],axis=0)
 
 	if gal_name=='NGC4150':
-		#remove two rings where the gap is
-		idx = [1,2]
+		#remove three rings where the gap is
+		idx = [1,2,3]
 		R = np.delete(R,idx)
 		eR = np.delete(eR,idx)
 		Vrot = np.delete(Vrot,idx)
-		eVrot = np.delete(eVrot,idx)
+		eVrot_u = np.delete(eVrot_u,idx)
+		eVrot_l = np.delete(eVrot_l,idx)
 		Vrad = np.delete(Vrad,idx)
 		eVrad = np.delete(eVrad,idx)
 		dVsys = np.delete(dVsys,idx)
@@ -256,7 +293,7 @@ def main(gal_name):
 	plt.axhline(0,color='gray',lw=0.75)
 	plt.axvspan(xmin=0,xmax=beam_kpc,fc='lightgray',ec='gray',alpha=0.25,hatch='\\\\',label='CO Beam FWHM',zorder=2)
 	plt.axvspan(0.3,0.8,ec='None',fc='k',alpha=0.1,zorder=1)
-	el1=plt.fill_between(R_kpc,Vrot+eVrot,Vrot-eVrot,fc='b',ec='None',alpha=0.3,zorder=3)
+	el1=plt.fill_between(R_kpc,Vrot+eVrot_u,Vrot-eVrot_l,fc='b',ec='None',alpha=0.3,zorder=3)
 	if rotmodel=='full':
 		el2=plt.fill_between(R_kpc,Vrad+eVrad,Vrad-eVrad,fc='r',ec='None',alpha=0.3,zorder=3)
 		el3=plt.fill_between(R_kpc,dVsys+edVsys,dVsys-edVsys,fc='g',ec='None',alpha=0.3,zorder=3)
@@ -315,11 +352,14 @@ def main(gal_name):
 		fp.write('#Vsys = %.1f\n' %Vsys)
 		fp.write('#RA = %f\n' %RA)
 		fp.write('#Dec = %f\n' %Dec)
-		fp.write('#column [0] = radius (arcsec),[1] = uncertainty on radius, [2] = rotation velocity (km/s), [3] = uncertainty on rotation velocity, [4] = radial velocity (km/s), [5] = uncertainty on radial velocity, [6] = devitation from systemic velocity (km/s), [7] = uncertainty on deviation from systemic velocity, [8] = reduced chi squared of fit\n')
+		fp.write('#column [0] = radius (arcsec),[1] = uncertainty on radius, [2] = rotation velocity (km/s), [3] = upper uncertainty on rotation velocity, [4] = lower uncertainty on rotation velocity, [5] = radial velocity (km/s), [6] = uncertainty on radial velocity, [7] = devitation from systemic velocity (km/s), [8] = uncertainty on deviation from systemic velocity, [9] = reduced chi squared of fit\n')
 		for i in range(len(R)):
-			fp.write('%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n'
-				%(R[i],eR[i],Vrot[i],eVrot[i],Vrad[i],eVrad[i],dVsys[i],edVsys[i],chisqr[i]))
+			fp.write('%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n'
+				%(R[i],eR[i],Vrot[i],eVrot_u[i],eVrot_l[i],Vrad[i],eVrad[i],dVsys[i],edVsys[i],chisqr[i]))
 
+
+	#compare the rot-only and full fits
+	#os.system('python CompareCORotationModels.py '+gal_name)
 
 main(gal_name)
 
