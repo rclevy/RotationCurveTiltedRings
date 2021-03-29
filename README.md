@@ -108,7 +108,7 @@
 	# run the ring fitting
 	R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA,Inc,Vsys,rmEndRings,Rmax,save_dir,plotOn,rotmodel)
 	
-Example output plot of the fit in one ring: [NGC6106_ringfit_21.292.pdf](https://github.com/rclevy/RotationCurveTiltedRings/files/6223013/NGC6106_ringfit_21.292.pdf)
+Example output plot of the fit in one ring: <img style="float: left;" src="https://github.com/rclevy/RotationCurveTiltedRings/files/6223013/NGC6106_ringfit_21.292.pdf">
  - This is an example of a "good" fit. Things to look that indicate a good fit are:
  	- The data (blue points) track the full model (green) curve well. Data which are "flat topped" or "peaky" with respect to the curves usually indicates that the inclination is wrong. Data points that only sample one side of the galaxy (i.e., only positive or negative azimuthal angles) may produce unreliable fits.
  	- The full model (green) and rotation-only (red) curves overlap. A horizontal offset between these may mean that the PA is wrong or that there is a kinematic twist in the galaxy.
