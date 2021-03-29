@@ -12,9 +12,9 @@
 ### Basic Information
 This function performs a first order harmonic decomposition in concentric rings on a 2D velocity field. The first order harmonic decompisition has the form:
 
-<img src="https://render.githubusercontent.com/render/math?math=V(r) = V_{rot}(r)\cos(\phi)\sin(i)+V_{rad}(r)\sin(\phi)\sin(i)+\Delta V_{sys}(r)">
+<img src="https://render.githubusercontent.com/render/math?math=V(r) = V_{\rm rot}(r)\cos(\phi)\sin(i)+V_{\rm rad}(r)\sin(\phi)\sin(i)+\Delta V_{\rm sys}(r)">
 
-where <img src="https://render.githubusercontent.com/render/math?math=r"> is the galactocentric radius, <img src="https://render.githubusercontent.com/render/math?math=\phi"> is the azimuthal angle in the plane of the disk, and <img src="https://render.githubusercontent.com/render/math?math=i"> is the inclination.
+where <img src="https://render.githubusercontent.com/render/math?math=r"> is the galactocentric radius, <img src="https://render.githubusercontent.com/render/math?math=\phi"> is the azimuthal angle in the plane of the disk, and <img src="https://render.githubusercontent.com/render/math?math=i"> is the inclination. The rotation component is given by <img src="https://render.githubusercontent.com/render/math?math=V_{\rm rot}(r)">, the radial component by <img src="https://render.githubusercontent.com/render/math?math=V_{\rm rad}(r)">, and deviations from the central systemic velocity by <img src="https://render.githubusercontent.com/render/math?math=\Delta V_{\rm sys}(r)">.
 
 The center, position angle, and inclination of the rings are the same for all rings. The ring radii are spaced using two criteria:
 1) The rings are spaced at half-beam-FWHM (or half-PSF-FWHM) increments.
@@ -154,6 +154,7 @@ Plot of the rotation curve components:
 - In addition to these checks based on the rotation curve and fits, it is a good idea to inspect the residual velocity map (i.e., the difference between the input velocity map and the model velocity map). The figure below is taken from a review article entitled [*"The kinematics of spiral and irregular galaxies"* by van der Kruit and Allen (1978)](https://ui.adsabs.harvard.edu/abs/1978ARA%26A..16..103V/abstract) and shows a useful schematic for diagnosing systematic problems with the input parameters based on patterns in the residual velocity field:
 <img src="https://user-images.githubusercontent.com/14076216/112874376-df3ded00-9090-11eb-8905-ff4299ad6d5e.png" width="500">
 
+- Plotting the rings on top of the velocity field can also be useful. An example of this is shown in `FitCORotationCurves.py` below. **Note:** The PA is defined counter-clockwise relative to *North* (i.e., the +y-axis) whereas most plotting routines define angles counter-clockwise relative to the +x-axis. To accurately plot the rings, you will need to add 90 deg to the PA in the plotting command. See line 142 in `FitCORotationCurves.py` for an example.
 
 
 ## FitCORotationCurves.py
