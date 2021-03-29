@@ -11,7 +11,7 @@
 
 ### Basic Information
 This function performs a first order harmonic decomposition in concentric rings on a 2D velocity field. The first order harmonic decompisition has the form:
-`$$V(r) = V_{rot}(r)cos(\phi)sin(i)+V_{rad}(r)sin(\phi)sin(i)+\Delta V_{sys}(r)$$`
+$$`V(r) = V_{rot}(r)cos(\phi)sin(i)+V_{rad}(r)sin(\phi)sin(i)+\Delta V_{sys}(r)`$$
 where . The center, position angle, and inclination of the rings are the same for all rings. The ring radii are spaced using two criteria: 1) The rings are spaced at half-beam-FWHM (or half-PSF-FWHM) increments. 2) If there are fewer than 30 pixels in a ring, the ring is expanded to enclose 30 pixels. 
 
 ### Package Dependencies 
