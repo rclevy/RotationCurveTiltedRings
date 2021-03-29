@@ -10,8 +10,8 @@
 *Any use of these codes or data products must cite Cooke, Levy, et al. (2021, in prep.).*
 
 ### Package Dependencies 
- - The following packages are strictly required: numpy, matplotlib, os, sys
- - The following packages are highly recommended: astropy, pandas
+ - The following packages are strictly required: `numpy, matplotlib, os, sys`
+ - The following packages are highly recommended: `astropy, pandas`
 
 ### Input Parameter Descriptions
 	gal_name : str
