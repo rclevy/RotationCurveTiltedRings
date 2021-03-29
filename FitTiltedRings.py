@@ -43,6 +43,8 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 	-------
 	R : array
 		numpy array containing the radii (center) of the fitted rings
+	eR : array
+		numpy array containing the uncertainty on the radii given by the width of the rings, in arcsec
 	Vrot : array
 		numpy array containing the fitted rotation velocity (cosine component)
 	eVrot : array
@@ -55,13 +57,19 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		numpy array containing the fitted deviation from the systemic velocity (constant component)
 	edVsys : array
 		numpy array containing the uncertainty on Vsys
+	chisq :  array
+		chi^2 statistic of fit per ring
+	chisqr : array
+		reduced chi^2 statistic of fit per ring
+	rms :  array
+		root-mean-square error of fit per ring
 	
 	Notes
 	-----
 	Required packages: numpy, matplotlib, os, sys
 	Author: R. C. Levy (rlevy.astro@gmail.com)
 	Based on bestfit.m and ringfit.m by A. D. Bolatto and bestgetrings.m by R. C. Levy
-	Last updated: 2021-03-09
+	Last updated: 2021-03-29
 	Change log:
 		2019-05-17 : file created, RCL
 		2019-05-20 : finished writing code, RCL
@@ -70,6 +78,7 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		2021-02-15 : return rms, add script name to pdf metadata, added Rmax keyword, RCL
 		2021-02-22 : fix ring-spacing algorithm, RCL
 		2021-03-09 : add keyword to allow for rotation-only model to be fit, RCL
+		2021-03-29 : added chisq, chisqr, rms descriptions to header, RCL
 
 	Examples
 	--------
