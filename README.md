@@ -20,12 +20,16 @@
 		2D numpy array containing the errors on the velocity map
 	RA : float
 		J2000 right ascension of the kinematic center of the galaxy, in decimal degrees
+		The RA is the same for all of the rings
 	Dec : float
 		J2000 declination of the kinematic center of the galaxy, in decimal degrees
+		The Dec is the same for all of the rings
 	PA : float
 		Position angle of the /approaching/ side of the major axis measured east of north, in degrees
+		The PA is the same for all of the rings
 	inc : float
-		Inclination of the galaxy to the line of sight, in degrees
+		Inclination of the galaxy to the line of sight, wher 0 deg is face-on and 90 deg is edge-on, in degrees
+		The inc is the same for all of the rings
 	Vsys : float
 		Systemic (AKA recessional) velocity of the center of the galaxy, in km/s
 	rmEndRings : int
@@ -44,18 +48,76 @@
 ### Returned Value Descriptions
 	R : array
 		numpy array containing the radii (center) of the fitted rings, in arcsec
+	eR : array
+		numpy array containing the uncertainty on the radii given by the width of the rings, in arcsec
 	Vrot : array
 		numpy array containing the fitted rotation velocity (cosine component), in km/s
 	eVrot : array
 		numpy array containing the uncertainty on Vrot, in km/s
+		This is the statistical fitting uncertaities, which are usually small and underestimate the true systematic uncertainties
 	Vrad : array
 		numpy array containting the fitted radial velocity (sine component), in km/s
 	eVrad : array
 		numpy array containing the uncertainty on Vrad, in km/s
+		This is the statistical fitting uncertaities, which are usually small and underestimate the true systematic uncertainties
 	dVsys : array
 		numpy array containing the fitted deviation from the systemic velocity (constant component), in km/s
 	edVsys : array
 		numpy array containing the uncertainty on Vsys, in km/s
+		This is the statistical fitting uncertaities, which are usually small and underestimate the true systematic uncertainties
+	chisq :  array
+		chi^2 statistic of fit per ring
+	chisqr : array
+		reduced chi^2 statistic of fit per ring
+	rms :  array
+		root-mean-square error of fit per ring
+
+### Example
+	# import modules
+	import numpy as np
+	from astropy.io import fits
+	import pandas as pd
+	from FitTiltedRings import fit_tilted_rings
+	
+	gal_name = 'NGC6106'
+	
+	# load galaxy parameters from file
+	fname_gal_params = '../Data/Galaxy_Parameters.csv'
+	gal_params = pd.read_csv(fname_gal_params) 
+	idx = gal_params['Name'].values.tolist().index(gal_name)
+	RA = gal_params['RA'][idx] #deg
+	Dec = gal_params['Dec'][idx] #deg
+	Inc = gal_params['Inc'][idx] #deg
+	PA = gal_params['PA'][idx] #deg
+	Vsys = float(gal_params['Vsys'][idx]) #km/s
+	Rmax = np.nan #don't impose max ring radius
+	rmEndRings = 0 #don't impose max ring radius
+	rotmodel = 'full' #fit full rotation model (cosine+sine+constant)
+	plotOn = True #save intermediate plots
+	save_dir = '../Plots/ringfit/' 
+	
+	# open the velocity field data
+	vel_fits = fits.open('../Data/gaussfit/'+gal_name+'.cgrad.vcen.fits',ignore_missing_end=True)
+	evel_fits = fits.open('../Data/gaussfit/'+gal_name+'.evcen.fits',ignore_missing_end=True)
+	hdr = vel_fits[0].header
+	vel = vel_fits[0].data
+	vel[vel==-999] = np.nan
+	evel = evel_fits[0].data
+	evel[evel==-999] = np.nan
+	
+	# run the ring fitting
+	R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA,Inc,Vsys,rmEndRings,Rmax,save_dir,plotOn,rotmodel)
+	
+Example output plot of the fit in one ring: [NGC6106_ringfit_21.292.pdf](https://github.com/rclevy/RotationCurveTiltedRings/files/6223013/NGC6106_ringfit_21.292.pdf)
+ - This is an example of a "good" fit. Things to look that indicate a good fit are:
+ 	- The data (blue points) track the full model (green) curve well. Data which are "flat topped" or "peaky" with respect to the curves usually indicates that the inclination is wrong. Data points that only sample one side of the galaxy (i.e., only positive or negative azimuthal angles) may produce unreliable fits.
+ 	- The full model (green) and rotation-only (red) curves overlap. A horizontal offset between these may mean that the PA is wrong or that there is a kinematic twist in the galaxy.
+ 	- The peak of the model curves is at an azimuthal angle of 0 deg. If instead there's a trough at 0 deg, the PA is wrong by 180 deg.
+
+Summary plot of fits in all rings: [NGC6106_ringfit.pdf](https://github.com/rclevy/RotationCurveTiltedRings/files/6223015/NGC6106_ringfit.pdf)
+
+Plot of the rotation curve components: [NGC6106_COrotcurve.pdf](https://github.com/rclevy/RotationCurveTiltedRings/files/6223155/NGC6106_COrotcurve.pdf)
+ - The uncertainties here reflect only the statistical fitting uncertainties. Other methods (bootstrapping, Monte Carlo) are useful to determine more representative uncertainties that account for systematic uncertainties. `FitCORotationCurves.py` (see below) gives an exmaple of doing a Monte Carlo over uncertainties in the center position, PA, and inc so that the errors reflect systematic uncertaintites in these parameters.
 
 
 ## FitCORotationCurves.py
