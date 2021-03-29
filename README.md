@@ -11,9 +11,14 @@
 
 ### Basic Information
 This function performs a first order harmonic decomposition in concentric rings on a 2D velocity field. The first order harmonic decompisition has the form:
-<img src="https://render.githubusercontent.com/render/math?math=V(r) = V_{rot}(r)cos(\phi)sin(i)+V_{rad}(r)sin(\phi)sin(i)+\Delta V_{sys}(r)">
 
-where . The center, position angle, and inclination of the rings are the same for all rings. The ring radii are spaced using two criteria: 1) The rings are spaced at half-beam-FWHM (or half-PSF-FWHM) increments. 2) If there are fewer than 30 pixels in a ring, the ring is expanded to enclose 30 pixels. 
+<img src="https://render.githubusercontent.com/render/math?math=V(r) = V_{rot}(r)\cos(\phi)\sin(i)+V_{rad}(r)\sin(\phi)\sin(i)+\Delta V_{sys}(r)">
+
+where <img src="https://render.githubusercontent.com/render/math?math=r"> is the galactocentric radius, <img src="https://render.githubusercontent.com/render/math?math=\phi"> is the azimuthal angle in the plane of the disk, and <img src="https://render.githubusercontent.com/render/math?math=i"> is the inclination.
+
+The center, position angle, and inclination of the rings are the same for all rings. The ring radii are spaced using two criteria:
+1) The rings are spaced at half-beam-FWHM (or half-PSF-FWHM) increments.
+2) If there are fewer than 30 pixels in a ring, the ring is expanded to enclose 30 pixels. 
 
 ### Package Dependencies 
  - The following packages are strictly required: `numpy, matplotlib, os, sys`
