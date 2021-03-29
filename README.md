@@ -126,13 +126,14 @@ Summary plot of fits in all rings:
 Plot of the rotation curve components:
 
 <img src="https://user-images.githubusercontent.com/14076216/112869682-66886200-908b-11eb-83ce-b925662cb9b6.png" width="500">
+
 - Things to look for in this plot that indicate a "good" fit are:
- - The radial (red) component is flat and ≈0. A systematic shift away from zero indicates the PA is wrong. A radial gradient in Vrad indicates that PA changes over the galaxy, possibly due to a bar or warp; changing the input parameters usually doesn't fix this trend.
- - The systemic (green) component is flat and ≈0. A systematic shift away from zero indicates the Vsys is wrong. A spike up or down in the center indicates that the center position is wrong. A radial gradient in ΔVsys may indicate a warp or twist in the galaxy; changing the input parameters usually doesn't fix this trend.
- - The rotation (blue) component is positive. Negative values indicate that the PA is wrong by 180 deg.
- - You may want to ser Rmax and/or rmEndRings if there are large errors and/or otherwise bad fits in any/all components at large radii 
+ 	- The radial (red) component is flat and ≈0. A systematic shift away from zero indicates the PA is wrong. A radial gradient in Vrad indicates that PA changes over the galaxy, possibly due to a bar or warp; changing the input parameters usually doesn't fix this trend.
+ 	- The systemic (green) component is flat and ≈0. A systematic shift away from zero indicates the Vsys is wrong. A spike up or down in the center indicates that the center position is wrong. A radial gradient in ΔVsys may indicate a warp or twist in the galaxy; changing the input parameters usually doesn't fix this trend.
+ 	- The rotation (blue) component is positive. Negative values indicate that the PA is wrong by 180 deg.
+ 	- You may want to ser Rmax and/or rmEndRings if there are large errors and/or otherwise bad fits in any/all components at large radii 
 - The uncertainties here reflect only the statistical fitting uncertainties.
- - Other methods (bootstrapping, Monte Carlo) are useful to determine more representative errors that account for systematic uncertainties. `FitCORotationCurves.py` (see below) gives an exmaple of doing a Monte Carlo over uncertainties in the center position, PA, and inc so that the rotation curve errors reflect systematic uncertaintites in these parameters. This CO rotation curve is shown below for comparison: 
+ 	- Other methods (bootstrapping, Monte Carlo) are useful to determine more representative errors that account for systematic uncertainties. `FitCORotationCurves.py` (see below) gives an exmaple of doing a Monte Carlo over uncertainties in the center position, PA, and inc so that the rotation curve errors reflect systematic uncertaintites in these parameters. This CO rotation curve is shown below for comparison: 
 <img src="https://user-images.githubusercontent.com/14076216/112871882-b8ca8280-908d-11eb-8b2d-59264b8efaa1.png" width="500">
 
 
