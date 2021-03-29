@@ -6,6 +6,9 @@
  - [Simon et al. 2005](https://ui.adsabs.harvard.edu/abs/2005ApJ...621..757S/abstract)
  - [Levy et al. 2018](https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract)
 
+
+*Any use of these codes or data products must cite Cooke, Levy, et al. (2021, in prep.).*
+
 ### Input Parameter Descriptions
 	gal_name : str
 		Name of galaxy to fit
@@ -57,6 +60,8 @@
 
 ## FitCORotationCurves.py
 `FitCORotationCurves.py` is a convenience wrapper function to load the relevant data, plot the velocity fields, fit, save, and plot the rotation curves, and do a Monte Carlo to get uncertainties on the rotation curves. This wrapper was written by R. C. Levy (rlevy.astro@gmail.com).
+
+*Any use of these codes or data products must cite Cooke, Levy, et al. (2021, in prep.).*
 
 ## CODataProducts_Cooke21.tar.gz
 The ALMA data used for this study are part of program ADS/JAO.ALMA#2015.1.00820.S (PI L. Blitz) and are publicly available on the [ALMA Science Archive](https://almascience.nrao.edu/asax/). Data products published in Cooke, Levy et al. (2021, in prep.) are available here (`CODataProducts_Cooke2021.tar.gz`). See Section 2 of Cooke, Levy, et al. (2021, in prep.) for details on the data calibration and imaging. The products presented here are the results of Gaussian fits to the data cube to extract the peak intensity, velocity centroid, and line width (see [Levy et al. 2018](https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract) for more details). These data products include:
