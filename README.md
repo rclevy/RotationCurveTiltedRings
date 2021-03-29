@@ -54,7 +54,7 @@ The center, position angle, and inclination of the rings are the same for all ri
 	save_dir : str
 		Path to directory to save output plots
 	plotON: flag
-		If True or NOT GIVEN, will make and save intermediate plots
+		If True or NOT GIVEN, will make and save intermediate plots showing the fits per ring
 		If False, will NOT make intermediate plots
 	rotmodel : flag
 		If 'rotonly', fits only the rotation (cosine) component
