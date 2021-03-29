@@ -108,19 +108,22 @@
 	# run the ring fitting
 	R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA,Inc,Vsys,rmEndRings,Rmax,save_dir,plotOn,rotmodel)
 	
-Example output plot of the fit in one ring: ![NGC6106_ringfit_21 292](https://user-images.githubusercontent.com/14076216/112869601-596b7300-908b-11eb-9458-7ecd29fb992c.png)
+Example output plot of the fit in one ring:
+<img src="https://user-images.githubusercontent.com/14076216/112869601-596b7300-908b-11eb-9458-7ecd29fb992c.png" width="500">
  - This is an example of a "good" fit. Things to look that indicate a good fit are:
  	- The data (blue points) track the full model (green) curve well. Data which are "flat topped" or "peaky" with respect to the curves usually indicates that the inclination is wrong. Data points that only sample one side of the galaxy (i.e., only positive or negative azimuthal angles) may produce unreliable fits.
  	- The full model (green) and rotation-only (red) curves overlap. A horizontal offset between these may mean that the PA is wrong or that there is a kinematic twist in the galaxy.
  	- The peak of the model curves is at an azimuthal angle of 0 deg. If instead there's a trough at 0 deg, the PA is wrong by 180 deg.
 
-Summary plot of fits in all rings: ![NGC6106_ringfit](https://user-images.githubusercontent.com/14076216/112869631-61c3ae00-908b-11eb-9e74-c62dac2ca076.png)
+Summary plot of fits in all rings:
+<img src="https://user-images.githubusercontent.com/14076216/112869631-61c3ae00-908b-11eb-9e74-c62dac2ca076.png" width="500">
 
 
-Plot of the rotation curve components: ![NGC6106_COrotcurve](https://user-images.githubusercontent.com/14076216/112869682-66886200-908b-11eb-83ce-b925662cb9b6.png)
+Plot of the rotation curve components:
+<img src="https://user-images.githubusercontent.com/14076216/112869682-66886200-908b-11eb-83ce-b925662cb9b6.png" width="500">
  - The uncertainties here reflect only the statistical fitting uncertainties.
  - Other methods (bootstrapping, Monte Carlo) are useful to determine more representative errors that account for systematic uncertainties. `FitCORotationCurves.py` (see below) gives an exmaple of doing a Monte Carlo over uncertainties in the center position, PA, and inc so that the rotation curve errors reflect systematic uncertaintites in these parameters. This CO rotation curve is shown below for comparison: 
-<img src="https://user-images.githubusercontent.com/14076216/112871882-b8ca8280-908d-11eb-8b2d-59264b8efaa1.png" width="300">
+<img src="https://user-images.githubusercontent.com/14076216/112871882-b8ca8280-908d-11eb-8b2d-59264b8efaa1.png" width="500">
 
 
 
