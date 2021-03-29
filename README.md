@@ -119,7 +119,8 @@ Summary plot of fits in all rings: ![NGC6106_ringfit](https://user-images.github
 
 Plot of the rotation curve components: ![NGC6106_COrotcurve](https://user-images.githubusercontent.com/14076216/112869682-66886200-908b-11eb-83ce-b925662cb9b6.png)
  - The uncertainties here reflect only the statistical fitting uncertainties.
- - Other methods (bootstrapping, Monte Carlo) are useful to determine more representative errors that account for systematic uncertainties. `FitCORotationCurves.py` (see below) gives an exmaple of doing a Monte Carlo over uncertainties in the center position, PA, and inc so that the rotation curve errors reflect systematic uncertaintites in these parameters. This CO rotation curve is shown below for comparison: <img src="https://user-images.githubusercontent.com/14076216/112871882-b8ca8280-908d-11eb-8b2d-59264b8efaa1.png" width="100">
+ - Other methods (bootstrapping, Monte Carlo) are useful to determine more representative errors that account for systematic uncertainties. `FitCORotationCurves.py` (see below) gives an exmaple of doing a Monte Carlo over uncertainties in the center position, PA, and inc so that the rotation curve errors reflect systematic uncertaintites in these parameters. This CO rotation curve is shown below for comparison: 
+<img src="https://user-images.githubusercontent.com/14076216/112871882-b8ca8280-908d-11eb-8b2d-59264b8efaa1.png" width="300">
 
 
 
