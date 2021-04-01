@@ -27,8 +27,8 @@ The center, position angle, and inclination of the rings are the same for all ri
 ### Input Parameter Descriptions
 	gal_name : str
 		Name of galaxy to fit
-	header : astropy header
-		astropy header of velocity field
+	header : dictionary
+		FITS header of velocity field
 	velfield : array
 		2D numpy array containing the velocity map
 	evelfield : array
