@@ -158,8 +158,10 @@ Plot of the rotation curve components:
 <img src="https://user-images.githubusercontent.com/14076216/112871882-b8ca8280-908d-11eb-8b2d-59264b8efaa1.png" width="400">
 
 - In addition to these checks based on the rotation curve and fits, it is a good idea to inspect the residual velocity map (i.e., the difference between the input velocity map and the model velocity map). The figure below is taken from a review article entitled [*"The kinematics of spiral and irregular galaxies"* by van der Kruit and Allen (1978)](https://ui.adsabs.harvard.edu/abs/1978ARA%26A..16..103V/abstract) and shows a useful schematic for diagnosing systematic problems with the input parameters based on patterns in the residual velocity field:
-<img src="https://user-images.githubusercontent.com/14076216/114915202-48439580-9df1-11eb-8334-41450ab2a8bc.png" width="500">
-Here is the residual velocity field for the galaxy used in this example: <img src="https://github.com/rclevy/RotationCurveTiltedRings/files/6320155/NGC6106_vfield_residual.pdf" width="400">
+<img src="https://user-images.githubusercontent.com/14076216/114915538-acfef000-9df1-11eb-85c5-45838f256281.png" width="500">
+
+Here is the residual velocity field for the galaxy used in this example: <img src="https://user-images.githubusercontent.com/14076216/114915202-48439580-9df1-11eb-8334-41450ab2a8bc.png![Uploading Screen Shot 2021-04-15 at 1.51.02 PM.png…]()
+" width="400">
 
 The residuals are small (note the colorbar scale). There are some patterns in the residuals at the center, likely due to the bar in this galaxy.
  
