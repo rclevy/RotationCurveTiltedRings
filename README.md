@@ -130,6 +130,11 @@ The center, position angle, and inclination of the rings are the same for all ri
 	R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms
 		=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA,Inc,Vsys,rmEndRings,Rmax,save_dir,plotOn,rotmodel)
 	
+Here's a plot of the velocity field for the galaxy used in this example:
+
+<img src="https://user-images.githubusercontent.com/14076216/114916289-a1f88f80-9df2-11eb-8497-619246eb662a.png" width="500">
+
+
 Example output plot of the fit in one ring:
 
 <img src="https://user-images.githubusercontent.com/14076216/112869601-596b7300-908b-11eb-9458-7ecd29fb992c.png" width="500">
@@ -157,16 +162,17 @@ Plot of the rotation curve components:
  	- Other methods (bootstrapping, Monte Carlo) are useful to determine more representative errors that account for systematic uncertainties. `FitCORotationCurves.py` (see below) gives an example of doing a Monte Carlo over uncertainties in the center position, PA, and inc so that the rotation curve errors reflect systematic uncertaintites in these parameters. This CO rotation curve is shown below for comparison: 
 <img src="https://user-images.githubusercontent.com/14076216/112871882-b8ca8280-908d-11eb-8b2d-59264b8efaa1.png" width="400">
 
-- In addition to these checks based on the rotation curve and fits, it is a good idea to inspect the residual velocity map (i.e., the difference between the input velocity map and the model velocity map). The figure below is taken from a review article entitled [*"The kinematics of spiral and irregular galaxies"* by van der Kruit and Allen (1978)](https://ui.adsabs.harvard.edu/abs/1978ARA%26A..16..103V/abstract) and shows a useful schematic for diagnosing systematic problems with the input parameters based on patterns in the residual velocity field:
+In addition to these checks based on the rotation curve and fits, it is a good idea to inspect the residual velocity map (i.e., the difference between the input velocity map and the model velocity map). The figure below is taken from a review article entitled [*"The kinematics of spiral and irregular galaxies"* by van der Kruit and Allen (1978)](https://ui.adsabs.harvard.edu/abs/1978ARA%26A..16..103V/abstract) and shows a useful schematic for diagnosing systematic problems with the input parameters based on patterns in the residual velocity field:
 
   <img src="https://user-images.githubusercontent.com/14076216/114915538-acfef000-9df1-11eb-85c5-45838f256281.png" width="500">
 
   Here is the residual velocity field for the galaxy used in this example:
   
   <img src="https://user-images.githubusercontent.com/14076216/114915697-e33c6f80-9df1-11eb-9958-4c7d867dac6d.png" width="400">
- 	- The residuals are small (note the colorbar scale). There are some patterns in the residuals at the center, likely due to the bar in this galaxy.
+ 	
+	- The residuals are small (note the colorbar scale). There are some patterns in the residuals at the center, likely due to the bar in this galaxy.
  
-- Plotting the rings on top of the velocity field can also be useful. An example of this is shown in `FitCORotationCurves.py` below. **Note:** The PA is defined counter-clockwise relative to *North* (i.e., the +y-axis) whereas most plotting routines define angles counter-clockwise relative to the +x-axis. To accurately plot the rings, you will need to add 90 deg to the PA in the plotting command. See line 142 in `FitCORotationCurves.py` for an example.
+Plotting the rings on top of the velocity field can also be useful. An example of this is shown in `FitCORotationCurves.py` below. **Note:** The PA is defined counter-clockwise relative to *North* (i.e., the +y-axis) whereas most plotting routines define angles counter-clockwise relative to the +x-axis. To accurately plot the rings, you will need to add 90 deg to the PA in the plotting command. See line 142 in `FitCORotationCurves.py` for an example.
   
   <img src="https://user-images.githubusercontent.com/14076216/114915258-55f91b00-9df1-11eb-8752-09018ab64539.png" width="400">
 
