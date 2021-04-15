@@ -7,6 +7,7 @@
  - [Simon et al. 2005](https://ui.adsabs.harvard.edu/abs/2005ApJ...621..757S/abstract)
  - [Levy et al. 2018](https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract)
 
+This python version is published to accompy the paper by Cooke, Levy et al. (2021, in prep.)
 
 *Any use of these codes or data products must cite Cooke, Levy, et al. (2021, in prep.).*
 
