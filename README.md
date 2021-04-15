@@ -158,15 +158,19 @@ Plot of the rotation curve components:
 <img src="https://user-images.githubusercontent.com/14076216/112871882-b8ca8280-908d-11eb-8b2d-59264b8efaa1.png" width="400">
 
 - In addition to these checks based on the rotation curve and fits, it is a good idea to inspect the residual velocity map (i.e., the difference between the input velocity map and the model velocity map). The figure below is taken from a review article entitled [*"The kinematics of spiral and irregular galaxies"* by van der Kruit and Allen (1978)](https://ui.adsabs.harvard.edu/abs/1978ARA%26A..16..103V/abstract) and shows a useful schematic for diagnosing systematic problems with the input parameters based on patterns in the residual velocity field:
+
   <img src="https://user-images.githubusercontent.com/14076216/114915538-acfef000-9df1-11eb-85c5-45838f256281.png" width="500">
 
   Here is the residual velocity field for the galaxy used in this example:
+  
   <img src="https://user-images.githubusercontent.com/14076216/114915697-e33c6f80-9df1-11eb-9958-4c7d867dac6d.png" width="400">
  	- The residuals are small (note the colorbar scale). There are some patterns in the residuals at the center, likely due to the bar in this galaxy.
  
 - Plotting the rings on top of the velocity field can also be useful. An example of this is shown in `FitCORotationCurves.py` below. **Note:** The PA is defined counter-clockwise relative to *North* (i.e., the +y-axis) whereas most plotting routines define angles counter-clockwise relative to the +x-axis. To accurately plot the rings, you will need to add 90 deg to the PA in the plotting command. See line 142 in `FitCORotationCurves.py` for an example.
+  
   <img src="https://user-images.githubusercontent.com/14076216/114915258-55f91b00-9df1-11eb-8752-09018ab64539.png" width="400">
 
+*Any use of these codes or data products must cite Cooke, Levy, et al. (2021, in prep.).*
 
 ## FitCORotationCurves.py
 `FitCORotationCurves.py` is a convenience wrapper function to load the relevant data, plot the velocity fields, fit, save, and plot the rotation curves, and do a Monte Carlo to get uncertainties on the rotation curves. This wrapper was written by R. C. Levy (rlevy.astro@gmail.com).
