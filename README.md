@@ -1,7 +1,7 @@
 # RotationCurveTiltedRings
 
 ## FitTiltedRings.py
-`FitTiltedRings.py` fits rotation curves from galaxy velocity fields using tilted rings and a first order harmonic decomposition. The Python implementation was developed by R. C. Levy (rlevy.astro@gmail.com) and is based on MATLAB scripts by A. D. Bolatto, J. D. Simon, and R. C. Levy. The MATLAB versions of this script were used to derive the rotation curves presented in:
+`FitTiltedRings.py` fits rotation curves from 2D galaxy velocity fields using tilted rings and a first order harmonic decomposition. The Python implementation was developed by R. C. Levy (rlevy.astro@gmail.com) and is based on MATLAB scripts by A. D. Bolatto, J. D. Simon, and R. C. Levy. The MATLAB versions of this script were used to derive the rotation curves presented in:
  - [Bolatto et al. 2002](https://ui.adsabs.harvard.edu/abs/2002ApJ...565..238B/abstract)
  - [Simon et al. 2003](https://ui.adsabs.harvard.edu/abs/2003ApJ...596..957S/abstract)
  - [Simon et al. 2005](https://ui.adsabs.harvard.edu/abs/2005ApJ...621..757S/abstract)
@@ -114,13 +114,16 @@ The center, position angle, and inclination of the rings are the same for all ri
 	save_dir = '../Plots/ringfit/' 
 	
 	# open the velocity field data
-	vel_fits = fits.open('../Data/gaussfit/'+gal_name+'.cgrad.vcen.fits',ignore_missing_end=True)
-	evel_fits = fits.open('../Data/gaussfit/'+gal_name+'.evcen.fits',ignore_missing_end=True)
+	vel_fits = fits.open('../Data/gaussfit/'+gal_name+'_velocity.fits',ignore_missing_end=True)
+	evel_fits = fits.open('../Data/gaussfit/'+gal_name+'_evelocity.fits',ignore_missing_end=True)
 	hdr = vel_fits[0].header
 	vel = vel_fits[0].data
-	vel[vel==-999] = np.nan
+	
+	# remove blanked pixels
+	# note they may instead be set to -999 without the 'BLANK' header keyword, it's a good idea to always plot your data first!
+	vel[vel==hdr['BLANK']] = np.nan
 	evel = evel_fits[0].data
-	evel[evel==-999] = np.nan
+	evel[evel==hdr['BLANK']] = np.nan
 	
 	# run the ring fitting
 	R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms
