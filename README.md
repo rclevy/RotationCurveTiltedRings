@@ -12,7 +12,7 @@ This python version is published to accompy the paper by Cooke, Levy et al. (202
 *Any use of these codes or data products must cite Cooke, Levy, et al. (2021, in prep.).*
 
 ### Basic Information
-This function performs a first order harmonic decomposition in concentric rings on a 2D velocity field. The first order harmonic decompisition has the form:
+This function performs a first order harmonic decomposition in concentric rings on a 2D velocity field. The first order harmonic decomposition has the form:
 
 <img src="https://render.githubusercontent.com/render/math?math=V(r) = V_{\rm{rot}}(r)\cos(\phi)\sin(i)+V_{\rm{rad}}(r)\sin(\phi)\sin(i)+\Delta V_{\rm{sys}}(r)">
 
