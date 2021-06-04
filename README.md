@@ -14,7 +14,7 @@ This python version is published to accompy the paper by Cooke, Levy et al. (202
 ### Basic Information
 This function performs a first order harmonic decomposition in concentric rings on a 2D velocity field. The first order harmonic decomposition has the form:
 
-<img src="https://render.githubusercontent.com/render/math?math=V(r) = V_{\rm{rot}}(r)\cos(\phi)\sin(i)+V_{\rm{rad}}(r)\sin(\phi)\sin(i)+\Delta V_{\rm{sys}}(r)">
+<img src="https://render.githubusercontent.com/render/math?math=V(r) = V_{\rm{rot}}(r)\cos(\phi)\sin(i) + V_{\rm{rad}}(r)\sin(\phi)\sin(i) + \Delta V_{\rm{sys}}(r)">
 
 where <img src="https://render.githubusercontent.com/render/math?math=r"> is the galactocentric radius, <img src="https://render.githubusercontent.com/render/math?math=\phi"> is the azimuthal angle in the plane of the disk, and <img src="https://render.githubusercontent.com/render/math?math=i"> is the inclination. The rotation component is given by <img src="https://render.githubusercontent.com/render/math?math=V_{\rm{rot}}(r)">, the radial component by <img src="https://render.githubusercontent.com/render/math?math=V_{\rm{rad}}(r)">, and deviations from the central systemic velocity by <img src="https://render.githubusercontent.com/render/math?math=\Delta V_{\rm{sys}}(r)">.
 
