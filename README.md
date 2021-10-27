@@ -42,9 +42,8 @@ The center, position angle, and inclination of the rings are the same for all ri
 		J2000 declination of the kinematic center of the galaxy, in decimal degrees
 		The Dec is the same for all of the rings
 	PA : float
-		Position angle of the *approaching* side of the major axis measured east of north, in degrees
+		Position angle of the receding side of the major axis measured east of north, in degrees
 		The PA is the same for all of the rings
-		*THIS WILL BE CHANGED TO BE MEASURED FROM THE RECEDING SIDE IN A FUTURE RELEASE*
 	inc : float
 		Inclination of the galaxy to the line of sight, wher 0 deg is face-on and 90 deg is edge-on, in degrees
 		The inc is the same for all of the rings
