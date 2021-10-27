@@ -21,9 +21,19 @@ def main(gal_name):
 	----------
 	gal_name : str
 		name of galaxy to fit
+	
 	make_grid : str
-		optional, if 'True' make a grid of models varying the geometric parameters, default is True, this is a slow process!
-		
+		If True or NOT GIVEN, make a grid of models varying the geometric parameters, this is a slow process!
+		If False, do not make this grid
+	
+	rot_only : str
+		If True fit only the rotation (cosine) component
+		If False or NOT GIVEN fit the full model of rotation (cosine), radial (sine), and systemic (constant) components
+
+	plotOn : str
+		If True or NOT GIVEN, make and save the individual ring fit plots
+		If False, will not make or save these plots
+
 	Returns
 	-------
 	
