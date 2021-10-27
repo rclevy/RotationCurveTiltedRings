@@ -20,20 +20,20 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 	Dec : float
 		J2000 declination of the kinematic center of the galaxy, in decimal degrees
 	PA : float
-		Position angle of the approaching side of the major axis measured east of north, in degrees
+		Position angle of the receding side of the major axis measured east of north, in degrees
 	inc : float
 		Inclination of the galaxy to the line of sight, in degrees
 	Vsys : float
 		Systemic (AKA recessional) velocity of the center of the galaxy, in km/s
 	rmEndRings : int
-		Number of end rings to remove from rotation curve fit, imposed after Rmax
+		Number of end rings to remove from rotation curve fit, imposed after Rmax, can be set to z0 so no rings are removed
 	Rmax : float
 		Maximum radius of rings, if NaN this limit is not imposed, in arcsec
 	save_dir : str
 		Path to directory to save output plots
 	plotON: flag
-		If true or NOT GIVEN, will make and save intermediate plots
-		If false, will NOT make nor save intermediate plots
+		If True or NOT GIVEN, will make and save intermediate plots
+		If False, will NOT make nor save intermediate plots
 	rotmodel : flag
 		If 'rotonly', fits only the rotation (cosine) component
 		If 'full', other, or NOT GIVEN, fits full rotation model (rotation:cosine, radial:sine, systemic:constant)
@@ -42,34 +42,37 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 	Returns
 	-------
 	R : array
-		numpy array containing the radii (center) of the fitted rings
+		numpy array containing the radii (center) of the fitted rings, in arcsec
 	eR : array
 		numpy array containing the uncertainty on the radii given by the width of the rings, in arcsec
 	Vrot : array
-		numpy array containing the fitted rotation velocity (cosine component)
+		numpy array containing the fitted rotation velocity (cosine component), in km/s
 	eVrot : array
-		numpy array containing the uncertainty on Vrot
+		numpy array containing the uncertainty on Vrot, in km/s
+		This is the statistical fitting uncertaities, which are usually small and underestimate the true systematic uncertainties
 	Vrad : array
-		numpy array containting the fitted radial velocity (sine component)
+		numpy array containting the fitted radial velocity (sine component), in km/s
 	eVrad : array
-		numpy array containing the uncertainty on Vrad
+		numpy array containing the uncertainty on Vrad, in km/s
+		This is the statistical fitting uncertaities, which are usually small and underestimate the true systematic uncertainties
 	dVsys : array
-		numpy array containing the fitted deviation from the systemic velocity (constant component)
+		numpy array containing the fitted deviation from the systemic velocity (constant component), in km/s
 	edVsys : array
-		numpy array containing the uncertainty on Vsys
+		numpy array containing the uncertainty on Vsys, in km/s
+		This is the statistical fitting uncertaities, which are usually small and underestimate the true systematic uncertainties
 	chisq :  array
 		chi^2 statistic of fit per ring
 	chisqr : array
 		reduced chi^2 statistic of fit per ring
 	rms :  array
 		root-mean-square error of fit per ring
-	
+
 	Notes
 	-----
 	Required packages: numpy, matplotlib, os, sys
 	Author: R. C. Levy (rlevy.astro@gmail.com)
 	Based on bestfit.m and ringfit.m by A. D. Bolatto and bestgetrings.m by R. C. Levy
-	Last updated: 2021-03-29
+	Last updated: 2021-04-05
 	Change log:
 		2019-05-17 : file created, RCL
 		2019-05-20 : finished writing code, RCL
@@ -78,7 +81,8 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		2021-02-15 : return rms, add script name to pdf metadata, added Rmax keyword, RCL
 		2021-02-22 : fix ring-spacing algorithm, RCL
 		2021-03-09 : add keyword to allow for rotation-only model to be fit, RCL
-		2021-03-29 : added chisq, chisqr, rms descriptions to header, RCL
+		2021-03-29 : updated header, RCL
+		2021-04-05 : change PA definition to be the receding side of the galaxy, RCL
 
 	Examples
 	--------
@@ -137,7 +141,8 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		sini = np.sin(np.radians(inc))
 		#convert pa from degrees to radian
 		#par = np.radians(PA-90.)
-		par = np.radians(270-PA)
+		#par = np.radians(270-PA)
+		par = np.radians(90-PA)
 		#get rotation matrix
 		rot = np.array([[np.cos(par), np.sin(par)],[-np.sin(par), np.cos(par)]])
 		#get coordinates
@@ -222,7 +227,8 @@ def fit_tilted_rings(gal_name,header,velfield,evelfield,RA,Dec,PA,inc,Vsys,rmEnd
 		flatcut = 10.
 		#get pa in radians
 		#par = np.radians(PA-90.)
-		par = np.radians(270-PA)
+		#par = np.radians(270-PA)
+		par = np.radians(90-PA)
 		#get rotation matrix
 		rot = np.array([[np.cos(par), np.sin(par)],[-np.sin(par), np.cos(par)]])
 		#get coordinates
