@@ -3,7 +3,7 @@
 ## FitTiltedRings.py
 `FitTiltedRings.py` fits rotation curves from 2D galaxy velocity fields using tilted rings and a first order harmonic decomposition. The Python implementation was developed by R. C. Levy (rlevy.astro@gmail.com) and is based on MATLAB scripts by A. D. Bolatto, J. D. Simon, and R. C. Levy. The MATLAB versions of this script were used to derive the rotation curves presented by [Bolatto et al. 2002](https://ui.adsabs.harvard.edu/abs/2002ApJ...565..238B/abstract), [Simon et al. 2003](https://ui.adsabs.harvard.edu/abs/2003ApJ...596..957S/abstract), [Simon et al. 2005](https://ui.adsabs.harvard.edu/abs/2005ApJ...621..757S/abstract), and [Levy et al. 2018](https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract).
 
-This python version is published to accompy the paper by [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract)
+This python version is published to accompany the paper by [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract)
 
 *Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract).*
 
