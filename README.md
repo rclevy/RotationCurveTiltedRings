@@ -174,7 +174,7 @@ Plotting the rings on top of the velocity field can also be useful. An example o
 *Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract).*
 
 ## FitCORotationCurves.py
-`FitCORotationCurves.py` is a convenience wrapper function to load the relevant data, plot the velocity fields, fit, save, and plot the rotation curves, and do a Monte Carlo to get uncertainties on the rotation curves, and plot the resodual velocity fields. This wrapper was written by R. C. Levy (rlevy.astro@gmail.com).
+`FitCORotationCurves.py` is a convenience wrapper function to load the relevant data, plot the velocity fields, fit, save, and plot the rotation curves, and do a Monte Carlo to get uncertainties on the rotation curves, and plot the residual velocity fields. This wrapper was written by R. C. Levy (rlevy.astro@gmail.com).
 
 *Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract).*
 
