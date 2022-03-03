@@ -3,9 +3,9 @@
 ## FitTiltedRings.py
 `FitTiltedRings.py` fits rotation curves from 2D galaxy velocity fields using tilted rings and a first order harmonic decomposition. The Python implementation was developed by R. C. Levy (rlevy.astro@gmail.com) and is based on MATLAB scripts by A. D. Bolatto, J. D. Simon, and R. C. Levy. The MATLAB versions of this script were used to derive the rotation curves presented by [Bolatto et al. 2002](https://ui.adsabs.harvard.edu/abs/2002ApJ...565..238B/abstract), [Simon et al. 2003](https://ui.adsabs.harvard.edu/abs/2003ApJ...596..957S/abstract), [Simon et al. 2005](https://ui.adsabs.harvard.edu/abs/2005ApJ...621..757S/abstract), and [Levy et al. 2018](https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract).
 
-This python version is published to accompy the paper by Cooke, Levy et al. (2021, submitted)
+This python version is published to accompy the paper by [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract)
 
-*Any use of these codes or data products must cite Cooke, Levy, et al. (2021, submitted).*
+*Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract).*
 
 ### Basic Information
 This function performs a first order harmonic decomposition in concentric rings on a 2D velocity field. The first order harmonic decomposition has the form:
@@ -171,12 +171,12 @@ Plotting the rings on top of the velocity field can also be useful. An example o
   
 <img src="https://user-images.githubusercontent.com/14076216/114915258-55f91b00-9df1-11eb-8752-09018ab64539.png" width="500">
 
-*Any use of these codes or data products must cite Cooke, Levy, et al. (2021, submitted).*
+*Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract).*
 
 ## FitCORotationCurves.py
 `FitCORotationCurves.py` is a convenience wrapper function to load the relevant data, plot the velocity fields, fit, save, and plot the rotation curves, and do a Monte Carlo to get uncertainties on the rotation curves, and plot the resodual velocity fields. This wrapper was written by R. C. Levy (rlevy.astro@gmail.com).
 
-*Any use of these codes or data products must cite Cooke, Levy, et al. (2021, submitted).*
+*Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract).*
 
 ## CODataProducts_Cooke21.tar.gz
 The ALMA data used for this study are part of program ADS/JAO.ALMA#2015.1.00820.S (PI L. Blitz) and are publicly available on the [ALMA Science Archive](https://almascience.nrao.edu/asax/). Data products published in Cooke, Levy et al. (2021, submitted) are available here (`CODataProducts_Cooke2021.tar.gz`). See Section 2 of Cooke, Levy, et al. (2021, submitted) for details on the data calibration and imaging. The products presented here are the results of Gaussian fits to the spectra in the data cube to extract the peak intensity, velocity centroid, and line width. These data products include:
@@ -187,7 +187,7 @@ The ALMA data used for this study are part of program ADS/JAO.ALMA#2015.1.00820.
  - Linewidth (FWHM): \*.fwhm.fits
  - Error in linewidth: \*.efwhm.fits   
 
-*Any use of these codes or data products must cite Cooke, Levy, et al. (2021, submitted).*
+*Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022arXiv220300694C/abstract).*
 
 ## Notes
 This repository's main branch is called [main, not master](https://www.cnet.com/news/microsofts-github-is-removing-coding-terms-like-master-and-slave/).
