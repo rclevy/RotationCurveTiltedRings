@@ -189,5 +189,10 @@ The ALMA data used for this study are part of program ADS/JAO.ALMA#2015.1.00820.
 
 *Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022MNRAS.512.1012C/abstract).*
 
+## Tables/Cooke2022_Table*.csv
+These are machine readable versions of the tables in [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022MNRAS.512.1012C/abstract). Column names should be straightforward to interpret and units are in the column names. 
+
+*Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022MNRAS.512.1012C/abstract).*
+
 ## Notes
 This repository's main branch is called [main, not master](https://www.cnet.com/news/microsofts-github-is-removing-coding-terms-like-master-and-slave/).
