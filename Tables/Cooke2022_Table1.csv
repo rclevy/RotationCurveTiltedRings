@@ -1,0 +1,7 @@
+Name,Beam_FWHM_arcsec,rms_noise_mJybeam-1,rms_noise_K,casa_calibration_version
+NGC1035,2.9,4.2,46,4.5.1
+NGC4310,2.4,4.1,65,4.5.3
+NGC4451,2.8,4.2,49,4.5.1
+NGC4701,2.8,4.3,50,4.5.1
+NGC5692,2.85,4.7,53,4.5.1
+NGC6106,2.4,3.4,54,4.5.2
