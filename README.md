@@ -1,5 +1,12 @@
 # RotationCurveTiltedRings
 
+## Jump to info about:
+1. [FitTiltedRings.py](#FitTiltedRings.py)
+2. [FitCORotationCurves.py](#FitCORotationCurves.py)
+3. [CODataProducts_Cooke21.tar.gz](#CODataProducts_Cooke21.tar.gz)
+4. [Tables/Cooke2022_Table*.csv](#Tables/Cooke2022_Table*.csv)
+5. [Notes](#Notes)
+
 ## FitTiltedRings.py
 `FitTiltedRings.py` fits rotation curves from 2D galaxy velocity fields using tilted rings and a first order harmonic decomposition. The Python implementation was developed by R. C. Levy (rlevy.astro@gmail.com) and is based on MATLAB scripts by A. D. Bolatto, J. D. Simon, and R. C. Levy. The MATLAB versions of this script were used to derive the rotation curves presented by [Bolatto et al. 2002](https://ui.adsabs.harvard.edu/abs/2002ApJ...565..238B/abstract), [Simon et al. 2003](https://ui.adsabs.harvard.edu/abs/2003ApJ...596..957S/abstract), [Simon et al. 2005](https://ui.adsabs.harvard.edu/abs/2005ApJ...621..757S/abstract), and [Levy et al. 2018](https://ui.adsabs.harvard.edu/abs/2018ApJ...860...92L/abstract).
 
@@ -190,7 +197,7 @@ The ALMA data used for this study are part of program ADS/JAO.ALMA#2015.1.00820.
 *Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022MNRAS.512.1012C/abstract).*
 
 ## Tables/Cooke2022_Table*.csv
-These are machine readable versions of the tables in [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022MNRAS.512.1012C/abstract). Column names should be straightforward to interpret and units are in the column names. 
+These are machine readable versions of the tables in [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022MNRAS.512.1012C/abstract). Column names should be straightforward to interpret and units are in the column names. Columns that start with "e_u" and "e_l" are the upper and lower uncertainties on the value.
 
 *Any use of these codes or data products must cite [Cooke, Levy et al. (2022)](https://ui.adsabs.harvard.edu/abs/2022MNRAS.512.1012C/abstract).*
 
