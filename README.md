@@ -1,9 +1,9 @@
 # RotationCurveTiltedRings
 
 ## Jump to info about:
-1. [FitTiltedRings.py](#FitTiltedRings.py)
-2. [FitCORotationCurves.py](#FitCORotationCurves.py)
-3. [CODataProducts_Cooke21.tar.gz](#CODataProducts_Cooke21.tar.gz)
+1. [FitTiltedRings.py](#fittiltedringspy)
+2. [FitCORotationCurves.py](#fitcorotationcurvespy)
+3. [CODataProducts_Cooke21.tar.gz](#codataproducts_cooke21targz)
 4. [Tables/Cooke2022_Table*.csv](#tablescooke2022_tablecsv)
 5. [Notes](#notes)
 
