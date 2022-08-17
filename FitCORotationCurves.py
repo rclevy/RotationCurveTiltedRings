@@ -127,6 +127,10 @@ def main(gal_name):
 	bmin = hdr['BMIN']/hdr['CDELT2'] #pixels
 	bpa = hdr['BPA']
 
+	#impose a 6 km/s error floor on the fitted velocities in the map
+	# following Relatores+2019
+	evel[evel<6]=6.
+
 	#convert velocity from radio to relativistic velocity frame
 	c = 2.9979E5 #km/s
 	vel = c*((1-(1-vel/c)**2)/(1+(1-vel/c)**2))
@@ -150,9 +154,10 @@ def main(gal_name):
 	snr[np.isnan(data_peak)==True]=0.
 	snr = ndimage.gaussian_filter(snr,sigma=(bmaj/2.355/2,bmaj/2.355/2),order=0)
 	vel[snr<3] = np.nan
+	evel[snr<3] = np.nan
 
 	#plot the CO velocity field
-	#crop to 1' square
+	#crop to 1.5' square
 	crop = 1.5/60/hdr['CDELT2']
 	xcen = RA_pix
 	ycen = Dec_pix
@@ -170,8 +175,9 @@ def main(gal_name):
 	#run the ringfitting
 	save_dir='../Plots/ringfit/'
 	print('Fitting with '+rotmodel+' model')
-	R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA,Inc,Vsys,rmEndRings,np.nan,save_dir,plotOn,rotmodel)
-	eVrot_fit = rms.copy() #error on Vrot from the rms of the fit in each ring
+	R,eR,Vrot,eVrot,Vrad,eVrad,dVsys,edVsys,chisq,chisqr,rms=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA,Inc,Vsys,rmEndRings,np.nan,save_dir,plotOn,rotmodel,True)
+	#eVrot_fit = rms.copy() #error on Vrot from the rms of the fit in each ring
+	eVrot_fit = eVrot.copy()
 	# eVrot_stat = eVrot.copy() #statistical fitting error on Vrot, very small
 	# eVrad_stat = eVrad.copy() #statistical fitting error on Vrad, very small
 	# edVsys_stat = edVsys.copy() #statistical fitting error on dVsys, very small
@@ -233,7 +239,7 @@ def main(gal_name):
 		dec = Dec + np.random.uniform(low=-cen_off,high=cen_off)
 		pa = PA + np.random.uniform(low=-pa_off,high=pa_off)
 		inc = Inc + np.random.uniform(low=-inc_off,high=inc_off)
-		_,_,e1,_,e2,_,e0,_,_,_,_=fit_tilted_rings(gal_name,hdr,vel,evel,ra,dec,pa,inc,Vsys,rmEndRings,np.nan,save_dir,False,rotmodel)
+		_,_,e1,_,e2,_,e0,_,_,_,_=fit_tilted_rings(gal_name,hdr,vel,evel,ra,dec,pa,inc,Vsys,rmEndRings,np.nan,save_dir,False,rotmodel,True)
 
 		if (np.all(np.isnan(e1))==True) | (np.all(np.isnan(e2))==True) | (np.all(np.isnan(e0))==True):
 			#throw away trials that result in NaNs
@@ -269,19 +275,21 @@ def main(gal_name):
 		Inc_grid = np.arange(Inc-inc_off,Inc+inc_off+grid_step,grid_step)
 		for j in range(len(PA_grid)):
 			for k in range(len(Inc_grid)):
-				r_g,_,vrot_g,_,_,_,_,_,_,_,evrot_g=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA_grid[j],Inc_grid[k],Vsys,rmEndRings,np.nan,save_dir,False,rotmodel)
+				r_g,_,vrot_g,evrot_g,_,_,_,_,_,_,evrot_g_rms=fit_tilted_rings(gal_name,hdr,vel,evel,RA,Dec,PA_grid[j],Inc_grid[k],Vsys,rmEndRings,np.nan,save_dir,False,rotmodel,True)
 
 				if len(vrot_g) > len(Vrot):
 					#if MC has more rings, trim extra rings
 					r_g = r_g[0:len(Vrot)]
 					vrot_g=vrot_g[0:len(Vrot)]
 					evrot_g=evrot_g[0:len(Vrot)]
+					evrot_g_rms=evrot_g_rms[0:len(Vrot)]
 				elif len(vrot_g) < len(Vrot):
 					#if MC has fewer rings, pad with NaNs
 					pad = np.zeros((int(len(Vrot)-len(vrot_g)),))*np.nan
 					r_g = np.concatenate((r_g,pad))
 					vrot_g = np.concatenate((vrot_g,pad))
 					evrot_g = np.concatenate((evrot_g,pad))
+					evrot_g_rms = np.concatenate((evrot_g_rms,pad))
 
 				#save the grids to a file to be passed in the the decomposition later on
 				if rotmodel == 'full':
@@ -296,10 +304,10 @@ def main(gal_name):
 					fp.write('#Vsys = %.1f\n' %Vsys)
 					fp.write('#RA = %f\n' %ra)
 					fp.write('#Dec = %f\n' %dec)
-					fp.write('#column [0] = radius (arcsec),[1] = radius (kpc), [2] = rotation velocity (km/s), [3] = uncertainty on rotation velocity from rms of fit in each ring (km/s)\n')
+					fp.write('#column [0] = radius (arcsec),[1] = radius (kpc), [2] = rotation velocity (km/s), [3] = statistical fitting uncertainty on the rotation velocity, [4] = uncertainty on rotation velocity from rms of fit in each ring (km/s)\n')
 					for i in range(len(R)):
-						fp.write('%.2f\t%.2f\t%.2f\t%.2f\n'
-							%(r_g[i],arcsec2kpc(r_g[i]),vrot_g[i],evrot_g[i]))
+						fp.write('%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n'
+							%(r_g[i],arcsec2kpc(r_g[i]),vrot_g[i],evrot_g[i],evrot_g_rms[i]))
 
 			
 	#remove the 0,0 point
@@ -308,12 +316,15 @@ def main(gal_name):
 	Vrot=Vrot[1:]
 	eVrot_MC=eVrot[1:]
 	eVrot_fit=eVrot_fit[1:]
+	eVrot=eVrot[1:]
 	eevrot = eevrot[:,1:]
 	Vrad=Vrad[1:]
 	eVrad_MC=eVrad[1:]
+	eVrad=eVrad[1:]
 	eevrad = eevrad[:,1:]
 	dVsys=dVsys[1:]
 	edVsys_MC=edVsys[1:]
+	edVsys=edVsys[1:]
 	eedvsys = eedvsys[:,1:]
 	chisq=chisq[1:]
 	chisqr=chisqr[1:]
@@ -325,12 +336,15 @@ def main(gal_name):
 	Vrot=Vrot[np.isnan(rms)==False]
 	eVrot_MC=eVrot_MC[np.isnan(rms)==False]
 	eVrot_fit=eVrot_fit[np.isnan(rms)==False]
+	eVrot=eVrot[np.isnan(rms)==False]
 	eevrot = eevrot[:,np.isnan(rms)==False]
 	Vrad=Vrad[np.isnan(rms)==False]
 	eVrad_MC=eVrad_MC[np.isnan(rms)==False]
+	eVrad=eVrad[np.isnan(rms)==False]
 	eevrad = eevrad[:,np.isnan(rms)==False]
 	dVsys=dVsys[np.isnan(rms)==False]
 	edVsys_MC=edVsys_MC[np.isnan(rms)==False]
+	edVsys=edVsys[np.isnan(rms)==False]
 	eedvsys = eedvsys[:,np.isnan(rms)==False]
 	chisq=chisq[np.isnan(rms)==False]
 	chisqr=chisqr[np.isnan(rms)==False]
@@ -381,8 +395,10 @@ def main(gal_name):
 			el3, = plt.plot(R_kpc[inx],np.squeeze(eedvsys[ii,inx]),'g-',alpha=0.05,zorder=2,lw=1)
 	l1=plt.errorbar(R_kpc,Vrot,yerr=eVrot_fit,color='b',marker='o',linestyle='-',lw=1.5,markersize=4,capsize=3,label=r'CO V$_{\mathrm{rot}}$',zorder=4)
 	if rotmodel=='full':
-		l2,=plt.plot(R_kpc,Vrad,'r-',lw=1.5,label=r'CO V$_{\mathrm{rad}}$',zorder=4)
-		l3,=plt.plot(R_kpc,dVsys,'g-',lw=1.5,label=r'CO $\Delta$V$_{\mathrm{sys}}$',zorder=4)
+		# l2,=plt.plot(R_kpc,Vrad,'r-',lw=1.5,label=r'CO V$_{\mathrm{rad}}$',zorder=4)
+		l2=plt.errorbar(R_kpc,Vrad,eVrad,fmt='r-',lw=1.5,capsize=3,label=r'CO V$_{\mathrm{rad}}$',zorder=4)
+		# l3,=plt.plot(R_kpc,dVsys,'g-',lw=1.5,label=r'CO $\Delta$V$_{\mathrm{sys}}$',zorder=4)
+		l3=plt.errorbar(R_kpc,dVsys,edVsys,fmt='g-',lw=1.5,capsize=3,label=r'CO $\Delta$V$_{\mathrm{sys}}$',zorder=4)
 	xlim = plt.gca().get_xlim()
 	if os.path.exists(harc_file)==True:
 		l4=plt.errorbar(Rha_kpc,Vha,yerr=eVha,fmt='^-',color='rebeccapurple',markersize=4,capsize=3,lw=1.5,label=r'H$\alpha$ V$_{\mathrm{rot}}$')
@@ -433,10 +449,10 @@ def main(gal_name):
 		fp.write('#Vsys = %.1f\n' %Vsys)
 		fp.write('#RA = %f\n' %RA)
 		fp.write('#Dec = %f\n' %Dec)
-		fp.write('#column [0] = radius (arcsec),[1] = uncertainty on radius, [2] = rotation velocity (km/s), [3] = upper uncertainty on rotation velocity from Monte Carlo, [4] = lower uncertainty on rotation velocity from Monte Carlo, [5] = radial velocity (km/s), [6] = uncertainty on radial velocity from Monte Carlo, [7] = devitation from systemic velocity (km/s), [8] = uncertainty on deviation from systemic velocity from Monte Carlo, [9] = reduced chi squared of fit, [10] = rms of fit\n')
+		fp.write('#column [0] = radius (arcsec),[1] = uncertainty on radius, [2] = rotation velocity (km/s), [3] = statistical fitting uncertainty on rotation velocity (km/s), [4] = upper uncertainty on rotation velocity from Monte Carlo, [5] = lower uncertainty on rotation velocity from Monte Carlo, [6] = radial velocity (km/s), [7] = statistical fitting uncertainty on radial velocity (km/s), [8] = uncertainty on radial velocity from Monte Carlo, [9] = devitation from systemic velocity (km/s), [10] = statistical fitting uncertainty on systemic velocity (km/s), [11] = uncertainty on deviation from systemic velocity from Monte Carlo, [12] = reduced chi squared of fit, [13] = rms of fit\n')
 		for i in range(len(R)):
-			fp.write('%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n'
-				%(R[i],eR[i],Vrot[i],eVrot_MC_u[i],eVrot_MC_l[i],Vrad[i],eVrad_MC[i],dVsys[i],edVsys_MC[i],chisqr[i],rms[i]))
+			fp.write('%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n'
+				%(R[i],eR[i],Vrot[i],eVrot[i],eVrot_MC_u[i],eVrot_MC_l[i],Vrad[i],eVrad[i],eVrad_MC[i],dVsys[i],edVsys[i],edVsys_MC[i],chisqr[i],rms[i]))
 
 
 	#make a model velocity field
@@ -483,6 +499,22 @@ def main(gal_name):
 		vmax=100.
 
 	#plot the residual velocity
+
+	if gal_name == 'NGC1035':
+		crop = crop #keep at 1.5' on a side
+	elif gal_name == 'NGC6106':
+		crop = 1.0/60/hdr['CDELT2'] #change to 1' on a side
+	# elif gal_name == 'NGC5692':
+	# 	crop = 0.5/60/hdr['CDELT2'] #change to 0.5' on a side
+	else:
+		crop = 0.75/60/hdr['CDELT2'] #change to 0.75' on a side
+
+	xtext = (xcen-crop/2)+0.05*((xcen+crop/2)-(xcen-crop/2))
+	ytext = (ycen-crop/2)+0.05*((ycen+crop/2)-(ycen-crop/2))
+	xsb = (xcen-crop/2)+0.8*((xcen+crop/2)-(xcen-crop/2))
+	ysb = (ycen-crop/2)+0.05*((ycen+crop/2)-(ycen-crop/2))
+
+	plt.rcParams['font.size'] = 24
 	plt.figure(1)
 	plt.clf()
 	ax=plt.subplot(projection=wcs)
