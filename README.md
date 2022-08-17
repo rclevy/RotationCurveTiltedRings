@@ -55,17 +55,17 @@ The center, position angle, and inclination of the rings are the same for all ri
 	Vsys : float
 		Systemic (AKA recessional) velocity of the center of the galaxy, in km/s
 	rmEndRings : int
-		Number of end rings to remove from rotation curve fit, imposed after Rmax, can be set to 0 so no rings are removed
+		Number of end rings to remove from rotation curve fit, imposed after Rmax, can be set to 0 so no rings are removed (Default: 0)
 	Rmax : float
-		Maximum radius of rings, if NaN this limit is not imposed, in arcsec
+		Maximum radius of rings, if NaN this limit is not imposed, in arcsec (Default: NaN)
 	save_dir : str
-		Path to directory to save output plots
-	plotON: flag
-		If True or NOT GIVEN, will make and save intermediate plots showing the fits per ring
-		If False, will NOT make intermediate plots
-	rotmodel : flag
-		If 'rotonly', fits only the rotation (cosine) component
-		If 'full', other, or NOT GIVEN, fits full rotation model (rotation:cosine, radial:sine, systemic:constant)
+		Path to directory to save output plots (Default: current directory)
+	plotON: boolean
+		If True or, will make and save intermediate plots. If False, will NOT make nor save intermediate plots. (Default: True)
+	rotmodel : string
+		If 'rotonly', fits only the rotation (cosine) component. If 'full' or other, fits full rotation model (rotation:cosine, radial:sine, systemic:constant). (Default: 'full')
+	min_pixels_per_ring : boolean
+		If False, rings will be spaced at half-beam-FWHM increments. If True, will impose that there are a minimum of 30 pixels per ring. Rings with <30 pixels will be expanded from the fiducial half-beam-FWHM spacing to include 30 pixels. (Default: True)
 
 ### Returned Value Descriptions
 	R : array
