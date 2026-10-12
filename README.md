@@ -21,7 +21,7 @@ This function performs a first order harmonic decomposition in concentric rings 
 
 $$V(r) = V_{\rm{rot}}(r)\cos(\phi)\sin(i) + V_{\rm{rad}}(r)\sin(\phi)\sin(i) + \Delta V_{\rm{sys}}(r)$$
 
-where <img src="https://render.githubusercontent.com/render/math?math=r"> is the galactocentric radius, <img src="https://render.githubusercontent.com/render/math?math=\phi"> is the azimuthal angle in the plane of the disk, and <img src="https://render.githubusercontent.com/render/math?math=i"> is the inclination. The rotation component is given by <img src="https://render.githubusercontent.com/render/math?math=V_{\rm{rot}}(r)">, the radial component by <img src="https://render.githubusercontent.com/render/math?math=V_{\rm{rad}}(r)">, and deviations from the central systemic velocity by <img src="https://render.githubusercontent.com/render/math?math=\Delta V_{\rm{sys}}(r)">.
+where $r$ is the galactocentric radius, $\phi$ is the azimuthal angle in the plane of the disk, and $i$ is the inclination. The rotation component is given by $V_{\rm{rot}}(r)$, the radial component by $V_{\rm{rad}}(r)$, and deviations from the central systemic velocity by $\Delta V_{\rm{sys}}(r)$.
 
 The center, position angle, and inclination of the rings are the same for all rings. The ring radii are spaced using two criteria:
 1) The rings are spaced at half-beam-FWHM (or half-PSF-FWHM) increments.
